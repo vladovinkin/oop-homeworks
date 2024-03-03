@@ -1,11 +1,10 @@
-// Replace.cpp : This file contains the 'main' function. Program execution begins and ends there.
+п»ї// Replace.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include "Replace.h"
 #include <fstream>
 #include <iostream>
 #include <optional>
-#include <string>
 
 struct Args
 {
@@ -33,40 +32,45 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, std::string searchSubstr, std::string replaceSubstr)
 {
+	std::string line;
+
 	while (!input.eof())
 	{
-		std::string line;
 		std::getline(input, line);
 
-		// Заменяем подстроки заданной строки на значение строки поиска и записываем результат в выходной файл
-		StreamProcessedLine(line, output, searchSubstr, replaceSubstr);
+		// Р—Р°РјРµРЅСЏРµРј РїРѕРґСЃС‚СЂРѕРєРё РѕС‡РµСЂРµРґРЅРѕР№ СЃС‚СЂРѕРєРё РЅР° Р·РЅР°С‡РµРЅРёРµ СЃС‚СЂРѕРєРё РїРѕРёСЃРєР° Рё Р·Р°РїРёСЃС‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚ РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»
+		output << GetOneLineReplaced(line, searchSubstr, replaceSubstr) << (!input.eof() ? "\n" : "");
 	}
 }
 
-void StreamProcessedLine(std::string line, std::ofstream& output, std::string searchSubstr, std::string replaceSubstr)
+std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::string replaceSubstr)
 {
+	std::string resultLine = "";
 	std::size_t foundPos = 0, curPos = 0;
 
-	foundPos = line.find(searchSubstr);
-	if (replaceSubstr.length() && foundPos != std::string::npos)
+	if (!replaceSubstr.empty())
 	{
-		do
+		foundPos = line.find(searchSubstr);
+
+		if (foundPos != std::string::npos)
 		{
-			std::cout << line.substr(curPos, foundPos - curPos) << replaceSubstr;
-			curPos = foundPos + searchSubstr.length();
-			foundPos = line.find(searchSubstr, curPos);
-		} while (foundPos != std::string::npos);
-		std::cout << line.substr(curPos) << "\n";
+			do
+			{
+				resultLine.append(line.substr(curPos, foundPos - curPos));
+				resultLine.append(replaceSubstr);
+				curPos = foundPos + searchSubstr.length();
+				foundPos = line.find(searchSubstr, curPos);
+			} while (foundPos != std::string::npos);
+			resultLine.append(line.substr(curPos));
+			return resultLine;
+		}
 	}
-	else
-	{
-		std::cout << line << "\n";
-	}
+	return line;
 }
 
 int main(int argc, char* argv[])
 {
-	// Проверка правильности аргументов командной строки
+	// РџСЂРѕРІРµСЂРєР° РїСЂР°РІРёР»СЊРЅРѕСЃС‚Рё Р°СЂРіСѓРјРµРЅС‚РѕРІ РєРѕРјР°РЅРґРЅРѕР№ СЃС‚СЂРѕРєРё
 	auto args = ParseArgs(argc, argv);
 
 	if (!args)
@@ -74,7 +78,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// Открываем входной файл
+	// РћС‚РєСЂС‹РІР°РµРј РІС…РѕРґРЅРѕР№ С„Р°Р№Р»
 	std::ifstream input;
 	input.open(args->inputFileName);
 	if (!input.is_open())
@@ -83,7 +87,7 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// Открываем выходной файл
+	// РћС‚РєСЂС‹РІР°РµРј РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»
 	std::ofstream output;
 	output.open(args->outputFileName);
 	if (!output.is_open())
@@ -92,18 +96,18 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// Заменяем подстроки входного файла на значение строки поиска и записываем результат в выходной файл
+	// Р—Р°РјРµРЅСЏРµРј РїРѕРґСЃС‚СЂРѕРєРё РІС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р° РЅР° Р·РЅР°С‡РµРЅРёРµ СЃС‚СЂРѕРєРё РїРѕРёСЃРєР° Рё Р·Р°РїРёСЃС‹РІР°РµРј СЂРµР·СѓР»СЊС‚Р°С‚ РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»
 	CopyStreamWithReplace(input, output, args->searchString, args->replaceString);
 
-	// Проверяем случилась ли проблема чтения входного файла
+	// РџСЂРѕРІРµСЂСЏРµРј СЃР»СѓС‡РёР»Р°СЃСЊ Р»Рё РїСЂРѕР±Р»РµРјР° С‡С‚РµРЅРёСЏ РІС…РѕРґРЅРѕРіРѕ С„Р°Р№Р»Р°
 	if (input.bad())
 	{
 		std::cout << "Failed to read data from input file\n";
 
 		return 1;
-	} 
+	}
 
-	// Проверяем на ошибку записи в выходной файл
+	// РџСЂРѕРІРµСЂСЏРµРј РЅР° РѕС€РёР±РєСѓ Р·Р°РїРёСЃРё РІ РІС‹С…РѕРґРЅРѕР№ С„Р°Р№Р»
 	if (!output.flush())
 	{
 		std::cout << "Failed to write data to output file\n";
