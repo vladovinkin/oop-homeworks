@@ -48,7 +48,7 @@ std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::
 	std::string resultLine = "";
 	std::size_t foundPos = 0, curPos = 0;
 
-	if (!replaceSubstr.empty())
+	if (!searchSubstr.empty())
 	{
 		foundPos = line.find(searchSubstr);
 
