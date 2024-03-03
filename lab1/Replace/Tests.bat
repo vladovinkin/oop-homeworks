@@ -15,11 +15,12 @@ fc Empty.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 1 Passed
 
 REM Process non empty File
+REM If search string is absent in File, output file must be equal to input file
 %MyProgram% NonEmptyFile.txt "%TEMP%\output.txt" "search" "replace" || goto err
 fc NonEmptyFile.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 2 Passed
 
-REM Copy missing file should fail
+REM Process missing file should fail
 %MyProgram% MissingFile.txt "%TEMP%\output.txt" "search" "replace" > nul && goto err
 echo Test 3 Passed
 
@@ -30,6 +31,36 @@ echo Test 4 Passed
 REM If input and output file is not specified, program must fail
 %MyProgram% > nul && goto err
 echo Test 5 Passed
+
+REM If search string is empty, output file must be equal to input file
+%MyProgram% NonEmptyFile.txt "%TEMP%\output.txt" "" "replace" || goto err
+fc NonEmptyFile.txt "%TEMP%\output.txt" > nul || goto err
+echo Test 6 Passed
+
+REM If search string and replace string is empty, output file must be equal to input file
+%MyProgram% NonEmptyFile.txt "%TEMP%\output.txt" "" "" || goto err
+fc NonEmptyFile.txt "%TEMP%\output.txt" > nul || goto err
+echo Test 7 Passed
+
+REM If replace string is empty, output file must be equal to expected result
+%MyProgram% cat.txt "%TEMP%\output_test8.txt" "cat" "" || goto err
+fc test8_expected.txt "%TEMP%\output_test8.txt" > nul || goto err
+echo Test 8 Passed
+
+REM Clear spaces test
+%MyProgram% cat.txt "%TEMP%\output_test9.txt" " " "" || goto err
+fc test9_expected.txt "%TEMP%\output_test9.txt" > nul || goto err
+echo Test 9 Passed
+
+REM Process Zero-length-file
+%MyProgram% zero-length.txt "%TEMP%\output.txt" " " "" || goto err
+fc zero-length.txt "%TEMP%\output.txt" > nul || goto err
+echo Test 10 Passed
+
+REM Replace search string 1231234 with replace string in input file, contains sequence 12312312345 and write result to output file
+%MyProgram% 12312312345.txt "%TEMP%\output.txt" "1231234" "xxx" || goto err
+fc test12_expected.txt "%TEMP%\output.txt" > nul || goto err
+echo Test 12 Passed
 
 REM Тесты прошли успешно
 echo All tests passed successfuly
