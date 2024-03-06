@@ -4,7 +4,6 @@
 #include "Replace.h"
 #include <fstream>
 #include <iostream>
-#include <optional>
 
 std::optional<Args> ParseArgs(int argc, char* argv[])
 {
@@ -22,7 +21,35 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, std::string searchSubstr, std::string replaceSubstr)
+void CopyFileWithReplace(const std::string& inputFileName, const std::string& outputFileName, const std::string& searchSubstr, const std::string& replaceSubstr)
+{
+	// Открываем входной файл
+	std::ifstream input;
+	input.open(inputFileName);
+	if (!input.is_open())
+	{
+		throw std::runtime_error("Failed to open '" + inputFileName + "' for reading");
+	}
+
+	// Открываем выходной файл
+	std::ofstream output;
+	output.open(outputFileName);
+	if (!output.is_open())
+	{
+		throw std::runtime_error("Failed to open '" + outputFileName + "' for writing");
+	}
+
+	// Заменяем подстроки входного файла на значение строки поиска и записываем результат в выходной файл
+	CopyStreamWithReplace(input, output, searchSubstr, replaceSubstr);
+
+	// Проверяем на ошибку записи в выходной файл
+	if (!output.flush())
+	{
+		throw std::runtime_error("Failed to write data to output file '" + outputFileName + "'");
+	}
+}
+
+void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, const std::string& searchSubstr, const std::string& replaceSubstr)
 {
 	std::string line;
 
@@ -31,16 +58,21 @@ void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, std::str
 	{
 		std::getline(input, line);
 
+		// Проверяем случилась ли проблема чтения входного файла
+		if (input.bad())
+		{
+			throw std::runtime_error("Failed to read data from input file");
+		}
+
 		// Заменяем подстроки очередной строки на значение строки поиска и записываем результат в выходной файл
-		// добавить обработку ошибки записи и выход из цикла если она произойдёт
 		output << GetOneLineReplaced(line, searchSubstr, replaceSubstr) << (!input.eof() ? "\n" : "");
 	}
 }
 
-//.. использовать передачу по константной ссылке, find 1 time, append <= 2
-std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::string replaceSubstr)
+// find 1 time, append <= 2
+std::string GetOneLineReplaced(const std::string& line, const std::string& searchSubstr, const std::string& replaceSubstr)
 {
-	std::string resultLine = ""; // достаточно просто объявить переменную
+	std::string resultLine;
 	std::size_t foundPos = 0, curPos = 0;
 
 	if (!searchSubstr.empty())
@@ -51,12 +83,12 @@ std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::
 		{
 			do
 			{
-			 	resultLine.append(line.substr(curPos, foundPos - curPos)); // append добавляющий подстроку
+				resultLine.append(line, curPos, foundPos - curPos);
 				resultLine.append(replaceSubstr);
 				curPos = foundPos + searchSubstr.length();
 				foundPos = line.find(searchSubstr, curPos);
 			} while (foundPos != std::string::npos);
-			resultLine.append(line.substr(curPos)); // аналогично
+			resultLine.append(line, curPos);
 			return resultLine;
 		}
 	}
@@ -73,41 +105,13 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
-	// выделите функцию копирования которая принимает имена файлов
-	// .. эта функция не должна выводить ничего (исключения почитать)
-	// Открываем входной файл
-	std::ifstream input;
-	input.open(args->inputFileName);
-	if (!input.is_open())
+	try
 	{
-		std::cout << "Failed to open '" << args->inputFileName << "' for reading\n";
-		return 1;
+		CopyFileWithReplace(args->inputFileName, args->outputFileName, args->searchString, args->replaceString);
 	}
-
-	// Открываем выходной файл
-	std::ofstream output;
-	output.open(args->outputFileName);
-	if (!output.is_open())
+	catch (const std::runtime_error& ex)
 	{
-		std::cout << "Failed to open '" << args->outputFileName << "' for writing\n";
-		return 1;
-	}
-
-	// Заменяем подстроки входного файла на значение строки поиска и записываем результат в выходной файл
-	CopyStreamWithReplace(input, output, args->searchString, args->replaceString);
-
-	// Проверяем случилась ли проблема чтения входного файла
-	if (input.bad())
-	{
-		std::cout << "Failed to read data from input file\n";
-
-		return 1;
-	}
-
-	// Проверяем на ошибку записи в выходной файл
-	if (!output.flush())
-	{
-		std::cout << "Failed to write data to output file\n";
+		std::cout << ex.what() << '\n';
 		return 1;
 	}
 

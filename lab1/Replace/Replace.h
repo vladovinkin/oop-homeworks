@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <optional>
 
 struct Args
 {
@@ -9,5 +10,6 @@ struct Args
 	std::string replaceString;
 };
 
-void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, std::string searchSubstr, std::string repalceSubstr);
-std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::string replaceSubstr);
+void CopyFileWithReplace(const std::optional<Args>& args);
+void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, const std::string &searchSubstr, const std::string &repalceSubstr);
+std::string GetOneLineReplaced(const std::string &line, const std::string &searchSubstr, const std::string &replaceSubstr);
