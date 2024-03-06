@@ -77,19 +77,20 @@ std::string GetOneLineReplaced(const std::string& line, const std::string& searc
 
 	if (!searchSubstr.empty())
 	{
-		foundPos = line.find(searchSubstr);
-
-		if (foundPos != std::string::npos)
+		while (foundPos != std::string::npos)
 		{
-			do
+			foundPos = line.find(searchSubstr, curPos);
+			if (foundPos != std::string::npos)
 			{
 				resultLine.append(line, curPos, foundPos - curPos);
 				resultLine.append(replaceSubstr);
 				curPos = foundPos + searchSubstr.length();
-				foundPos = line.find(searchSubstr, curPos);
-			} while (foundPos != std::string::npos);
-			resultLine.append(line, curPos);
-			return resultLine;
+			}
+			else
+			{
+				resultLine.append(line, curPos);
+				return resultLine;
+			}
 		}
 	}
 	return line;
