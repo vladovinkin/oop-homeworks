@@ -26,18 +26,21 @@ void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, std::str
 {
 	std::string line;
 
+	// этот цикл будет выполняться бесконечно если произойдёт ошибка
 	while (!input.eof())
 	{
 		std::getline(input, line);
 
 		// Заменяем подстроки очередной строки на значение строки поиска и записываем результат в выходной файл
+		// добавить обработку ошибки записи и выход из цикла если она произойдёт
 		output << GetOneLineReplaced(line, searchSubstr, replaceSubstr) << (!input.eof() ? "\n" : "");
 	}
 }
 
+//.. использовать передачу по константной ссылке, find 1 time, append <= 2
 std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::string replaceSubstr)
 {
-	std::string resultLine = "";
+	std::string resultLine = ""; // достаточно просто объявить переменную
 	std::size_t foundPos = 0, curPos = 0;
 
 	if (!searchSubstr.empty())
@@ -48,12 +51,12 @@ std::string GetOneLineReplaced(std::string line, std::string searchSubstr, std::
 		{
 			do
 			{
-				resultLine.append(line.substr(curPos, foundPos - curPos));
+			 	resultLine.append(line.substr(curPos, foundPos - curPos)); // append добавляющий подстроку
 				resultLine.append(replaceSubstr);
 				curPos = foundPos + searchSubstr.length();
 				foundPos = line.find(searchSubstr, curPos);
 			} while (foundPos != std::string::npos);
-			resultLine.append(line.substr(curPos));
+			resultLine.append(line.substr(curPos)); // аналогично
 			return resultLine;
 		}
 	}
@@ -70,6 +73,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	// выделите функцию копирования которая принимает имена файлов
+	// .. эта функция не должна выводить ничего (исключения почитать)
 	// Открываем входной файл
 	std::ifstream input;
 	input.open(args->inputFileName);
