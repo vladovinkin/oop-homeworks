@@ -57,6 +57,11 @@ REM Process Zero-length-file
 fc zero-length.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 10 Passed
 
+REM Replace search string cat with replace string dog in input file and write result to output file
+%MyProgram% cat.txt "%TEMP%\output.txt" "cat" "dog" || goto err
+fc test11_expected.txt "%TEMP%\output.txt" > nul || goto err
+echo Test 11 Passed
+
 REM Replace search string 1231234 with replace string in input file, contains sequence 12312312345 and write result to output file
 %MyProgram% 12312312345.txt "%TEMP%\output.txt" "1231234" "xxx" || goto err
 fc test12_expected.txt "%TEMP%\output.txt" > nul || goto err
