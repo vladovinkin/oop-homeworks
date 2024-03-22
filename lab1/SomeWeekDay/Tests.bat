@@ -15,7 +15,6 @@ fc empty.txt "%TEMP%\output.txt" > nul || goto err
 echo Test 1 Passed
 
 
-
 REM Тесты прошли успешно
 echo All tests passed successfuly
 exit /B 0
