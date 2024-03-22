@@ -8,19 +8,6 @@
 #include <optional>
 #include <sstream>
 
-std::optional<Args> ParseArgs(int argc, char* argv[])
-{
-	if (argc != 2)
-	{
-		std::cout << "Invalid arguments count\n";
-		std::cout << "Usage: SomeWeekDay.exe <file_with_dates>\n";
-		return std::nullopt;
-	}
-	Args args;
-	args.fileName = argv[1];
-	return args;
-}
-
 std::size_t GetMonthDaysNumber(std::size_t month, std::size_t year)
 {
 	switch (month)
@@ -51,35 +38,22 @@ bool IsYearIntercalary(std::size_t year)
 	return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 }
 
-void CheckSameWeekDay(const std::string& fileName)
+void CheckSameWeekDay()
 {
-	// открываем входной файл
-	std::ifstream input;
-	input.open(fileName);
-	if (!input.is_open())
-	{
-		throw std::runtime_error("Failed to open '" + fileName + "' for reading");
-	}
-
-	// читаем даты
-	DateYMD dateOne = ReadDatesFromStream(input);
-	DateYMD dateTwo = ReadDatesFromStream(input);
+	// читаем даты из стандартного потока
+	DateYMD dateOne = ReadDate();
+	DateYMD dateTwo = ReadDate();
 
 	// сравниваем, выдаём результат
 	ShowSameWeekDayResult(dateOne, dateTwo);
 }
 
-DateYMD ReadDatesFromStream(std::ifstream& input)
+DateYMD ReadDate()
 {
 	std::string line;
-	std::getline(input, line);
-	if (input.bad())
-	{
-		throw std::runtime_error("Failed to read data from input file");
-	}
+	std::getline(std::cin, line);
 
 	std::istringstream lineStream(line);
-
 	DateYMD date;
 	lineStream >> date.year >> date.month >> date.day;
 
@@ -114,12 +88,12 @@ std::size_t GetDatesDeltaInDays(DateYMD dateOne, DateYMD dateTwo)
 	int delta;
 	if (dateOne.month == dateTwo.month)
 	{
-		delta = dateTwo.day - dateOne.day;
+		delta = int(dateTwo.day - dateOne.day);
 	}
 	else
 	{
 		const int monthDistance[]{ 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
-		delta = monthDistance[dateOne.month] + dateOne.day - monthDistance[dateTwo.month] - dateTwo.day;
+		delta = int(monthDistance[dateOne.month] + dateOne.day - monthDistance[dateTwo.month] - dateTwo.day);
 		if (IsYearIntercalary(dateOne.year) && (dateOne.month < 3 && dateTwo.month >= 3 || dateTwo.month < 3 && dateOne.month >= 3))
 		{
 			return std::abs(delta) + 1;
@@ -128,19 +102,16 @@ std::size_t GetDatesDeltaInDays(DateYMD dateOne, DateYMD dateTwo)
 	return std::abs(delta);
 }
 
-int main(int argc, char* argv[])
+int main()
 {
-	auto args = ParseArgs(argc, argv);
-
 	try
 	{
-		CheckSameWeekDay(args->fileName);
+		CheckSameWeekDay();
 	}
 	catch (const std::runtime_error& ex)
 	{
 		std::cout << ex.what() << '\n';
 		return 1;
 	}
-
 	return 0;
 }
