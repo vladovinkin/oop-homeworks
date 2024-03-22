@@ -13,6 +13,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 		std::cout << "Usage: Replace.exe <input file> <output file> <search string> <replace string>\n";
 		return std::nullopt;
 	}
+		
 	Args args;
 	args.inputFileName = argv[1];
 	args.outputFileName = argv[2];
@@ -69,31 +70,28 @@ void CopyStreamWithReplace(std::ifstream& input, std::ofstream& output, const st
 	}
 }
 
-// find 1 time, append <= 2
 std::string GetOneLineReplaced(const std::string& line, const std::string& searchSubstr, const std::string& replaceSubstr)
 {
-	std::string resultLine;
-	std::size_t foundPos = 0, curPos = 0;
-
-	if (!searchSubstr.empty())
+	if (searchSubstr.empty())
 	{
-		while (foundPos != std::string::npos)
-		{
-			foundPos = line.find(searchSubstr, curPos);
-			if (foundPos != std::string::npos)
-			{
-				resultLine.append(line, curPos, foundPos - curPos);
-				resultLine.append(replaceSubstr);
-				curPos = foundPos + searchSubstr.length();
-			}
-			else
-			{
-				resultLine.append(line, curPos);
-				return resultLine;
-			}
-		}
+		return line;
 	}
-	return line;
+	std::string resultLine;
+	std::size_t foundPos = 0;
+	// std::size_t startPos = 0;
+	while (foundPos != std::string::npos)
+	{
+		auto curPos = foundPos;
+		foundPos = line.find(searchSubstr, curPos);
+		resultLine.append(line, curPos, foundPos - curPos);
+		if (foundPos == std::string::npos)
+		{
+			break;
+		}
+		resultLine.append(replaceSubstr);
+		foundPos = foundPos + searchSubstr.length();
+	}
+	return resultLine;
 }
 
 int main(int argc, char* argv[])
@@ -108,6 +106,7 @@ int main(int argc, char* argv[])
 
 	try
 	{
+		// замена всех вхождений подстроки в текстовом файле на другую строку и запись результата в выходной файл
 		CopyFileWithReplace(args->inputFileName, args->outputFileName, args->searchString, args->replaceString);
 	}
 	catch (const std::runtime_error& ex)
