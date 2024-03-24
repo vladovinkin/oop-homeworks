@@ -1,12 +1,55 @@
 ﻿// SomeWeekDay.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "SomeWeekDay.h"
 #include <cassert>
-#include <fstream>
 #include <iostream>
 #include <optional>
 #include <sstream>
+
+struct DateYMD
+{
+	int year;
+	int month;
+	int day;
+};
+
+struct Args
+{
+	std::string fileName;
+};
+
+constexpr int DaysBeforeJanuary = 0;
+constexpr int DaysBeforeFebruary = DaysBeforeJanuary + 31;
+constexpr int DaysBeforeMarch = DaysBeforeFebruary + 28;
+constexpr int DaysBeforeApril = DaysBeforeMarch + 31;
+constexpr int DaysBeforeMay = DaysBeforeApril + 30;
+constexpr int DaysBeforeJune = DaysBeforeMay + 31;
+constexpr int DaysBeforeJuly = DaysBeforeJune + 30;
+constexpr int DaysBeforeAugust = DaysBeforeJuly + 31;
+constexpr int DaysBeforeSeptember = DaysBeforeAugust + 31;
+constexpr int DaysBeforeOctober = DaysBeforeSeptember + 30;
+constexpr int DaysBeforeNovember = DaysBeforeOctober + 31;
+constexpr int DaysBeforeDecember = DaysBeforeNovember + 30;
+
+constexpr int DaysToMonth[] = {
+	DaysBeforeJanuary,
+	DaysBeforeFebruary,
+	DaysBeforeMarch,
+	DaysBeforeApril,
+	DaysBeforeMay,
+	DaysBeforeJune,
+	DaysBeforeJuly,
+	DaysBeforeAugust,
+	DaysBeforeSeptember,
+	DaysBeforeOctober,
+	DaysBeforeNovember,
+	DaysBeforeDecember
+};
+
+bool IsYearLeap(std::size_t year)
+{
+	return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
+}
 
 std::size_t GetMonthDaysNumber(std::size_t month, std::size_t year)
 {
@@ -21,7 +64,7 @@ std::size_t GetMonthDaysNumber(std::size_t month, std::size_t year)
 	case 12:
 		return 31;
 	case 2:
-		return IsYearIntercalary(year) ? 29 : 28;
+		return IsYearLeap(year) ? 29 : 28;
 	case 4:
 	case 6:
 	case 9:
@@ -33,19 +76,11 @@ std::size_t GetMonthDaysNumber(std::size_t month, std::size_t year)
 	}
 }
 
-bool IsYearIntercalary(std::size_t year)
+bool IsDateCorrect(const DateYMD& date)
 {
-	return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
-}
-
-void CheckSameWeekDay()
-{
-	// читаем даты из стандартного потока
-	DateYMD dateOne = ReadDate();
-	DateYMD dateTwo = ReadDate();
-
-	// сравниваем, выдаём результат
-	ShowSameWeekDayResult(dateOne, dateTwo);
+	return date.year >= 1900 && date.year <= 9999
+		&& date.month > 0 && date.month <= 12
+		&& date.day > 0 && date.day <= GetMonthDaysNumber(date.month, date.year);
 }
 
 DateYMD ReadDate()
@@ -57,7 +92,7 @@ DateYMD ReadDate()
 	DateYMD date;
 	lineStream >> date.year >> date.month >> date.day;
 
-	if (!isDateCorrect(date))
+	if (!IsDateCorrect(date))
 	{
 		throw std::runtime_error("Error date data");
 	}
@@ -65,48 +100,46 @@ DateYMD ReadDate()
 	return date;
 }
 
-bool isDateCorrect(const DateYMD date)
+int GetDaysToDate(const DateYMD& date)
 {
-	return date.year >= 1900 && date.year <= 9999
-		&& date.month > 0 && date.month <= 12
-		&& date.day > 0 && date.day <= GetMonthDaysNumber(date.month, date.year);
+	// Если год високосный и месяц март и выше, добавить один день
+	if (IsYearLeap(date.year) && date.month >= 2)
+	{
+		return DaysToMonth[date.month - 1] + date.day + 1;
+	}
+	return DaysToMonth[date.month - 1] + date.day;
 }
 
-void ShowSameWeekDayResult(const DateYMD dateOne, const DateYMD dateTwo)
+std::size_t GetDatesDeltaInDays(const DateYMD& dateOne, const DateYMD& dateTwo)
+{
+	return std::abs(GetDaysToDate(dateOne) - GetDaysToDate(dateTwo));
+}
+
+std::string CheckSameWeekDayResult(const DateYMD& dateOne, const DateYMD& dateTwo)
 {
 	if (dateOne.year != dateTwo.year)
 	{
-		std::cout << "ERROR\n";
-		return;
+		return "ERROR";
 	}
-	auto day_count = GetDatesDeltaInDays(dateOne, dateTwo);
-	std::cout << (day_count % 7 == 0 ? "Same week day" : "Different week days") << '\n';
+	auto dayСount = GetDatesDeltaInDays(dateOne, dateTwo);
+	return dayСount % 7 == 0 ? "Same week day" : "Different week days";
 }
 
-std::size_t GetDatesDeltaInDays(DateYMD dateOne, DateYMD dateTwo)
+std::string CheckSameWeekDay()
 {
-	int delta;
-	if (dateOne.month == dateTwo.month)
-	{
-		delta = int(dateTwo.day - dateOne.day);
-	}
-	else
-	{
-		const int monthDistance[]{ 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
-		delta = int(monthDistance[dateOne.month] + dateOne.day - monthDistance[dateTwo.month] - dateTwo.day);
-		if (IsYearIntercalary(dateOne.year) && (dateOne.month < 3 && dateTwo.month >= 3 || dateTwo.month < 3 && dateOne.month >= 3))
-		{
-			return std::abs(delta) + 1;
-		}
-	}
-	return std::abs(delta);
+	// читаем даты из стандартного потока
+	DateYMD dateOne = ReadDate();
+	DateYMD dateTwo = ReadDate();
+
+	// сравниваем, возвращаем результат
+	return CheckSameWeekDayResult(dateOne, dateTwo);
 }
 
 int main()
 {
 	try
 	{
-		CheckSameWeekDay();
+		std::cout << CheckSameWeekDay() << '\n';
 	}
 	catch (const std::runtime_error& ex)
 	{
