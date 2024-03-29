@@ -1,0 +1,1 @@
+Unable to calculate invert matrix, because matrix determinant equal to zero
