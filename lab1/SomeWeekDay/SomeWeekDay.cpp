@@ -115,14 +115,14 @@ std::size_t GetDatesDeltaInDays(const DateYMD& dateOne, const DateYMD& dateTwo)
 	return std::abs(GetDaysToDate(dateOne) - GetDaysToDate(dateTwo));
 }
 
-std::string CheckSameWeekDayResult(const DateYMD& dateOne, const DateYMD& dateTwo)
+bool IsSameWeekDay(const DateYMD& dateOne, const DateYMD& dateTwo)
 {
 	if (dateOne.year != dateTwo.year)
 	{
 		return "ERROR";
 	}
 	auto dayСount = GetDatesDeltaInDays(dateOne, dateTwo);
-	return dayСount % 7 == 0 ? "Same week day" : "Different week days";
+	return dayСount % 7 == 0;
 }
 
 std::string CheckSameWeekDay()
@@ -132,7 +132,7 @@ std::string CheckSameWeekDay()
 	DateYMD dateTwo = ReadDate();
 
 	// сравниваем, возвращаем результат
-	return CheckSameWeekDayResult(dateOne, dateTwo);
+	return IsSameWeekDay(dateOne, dateTwo) ? "Same week day" : "Different week days";
 }
 
 int main()
