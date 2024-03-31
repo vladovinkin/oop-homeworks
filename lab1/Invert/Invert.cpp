@@ -6,13 +6,11 @@
 #include <sstream>
 #include <cassert>
 #include <iomanip>
+#include <array>
 
 constexpr int MatrixSize = 3;
-typedef double matrix3x3[MatrixSize][MatrixSize];
-
-struct MatrixWrap {
-	matrix3x3 items;
-};
+typedef std::array<double, MatrixSize> Matrix3;
+typedef std::array<Matrix3, MatrixSize> Matrix3x3;
 
 struct Args {
 	std::string fileName;
@@ -31,81 +29,80 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 	return args;
 }
 
-void PrintMatrix3x3(const MatrixWrap& matrix)
+void PrintMatrix3x3(const Matrix3x3& matrix)
 {
-	for (size_t r = 0; r < MatrixSize; r++)
+	for (const Matrix3 &r : matrix)
 	{
-		for (size_t c = 0; c < MatrixSize; c++)
+		for (double item : r)
 		{
 			std::cout.setf(std::ios::fixed);
-			std::cout << std::setprecision(3) << std::setw(8) << matrix.items[r][c];
+			std::cout << std::setprecision(3) << std::setw(8) << item;
 		}
 		std::cout << '\n';
 	}
 }
 
-double GetMinorElement(const MatrixWrap& matrix, size_t row, size_t col)
+double GetMinorElement(const Matrix3x3& matrix, size_t row, size_t col)
 {
 	size_t rows[2], cols[2];
 	rows[0] = row == 1 || row == 2 ? 0 : 1;
 	cols[0] = col == 1 || col == 2 ? 0 : 1;
 	rows[1] = row == 1 || row == 0 ? 2 : 1;
 	cols[1] = col == 1 || col == 0 ? 2 : 1;
-	return (matrix.items[rows[0]][cols[0]] * matrix.items[rows[1]][cols[1]] - matrix.items[rows[0]][cols[1]] * matrix.items[rows[1]][cols[0]])
+	return (matrix[rows[0]][cols[0]] * matrix[rows[1]][cols[1]] - matrix[rows[0]][cols[1]] * matrix[rows[1]][cols[0]])
 		* ((row + col) % 2 ? -1 : 1);
 }
 
-MatrixWrap GetMatrixMinor(const MatrixWrap& matrix)
+Matrix3x3 GetMatrixMinor(const Matrix3x3& matrix)
 {
-	MatrixWrap matrixMinor;
+	Matrix3x3 matrixMinor;
 	for (size_t r = 0; r < MatrixSize; r++)
 	{
 		for (size_t c = 0; c < MatrixSize; c++)
 		{
-			matrixMinor.items[r][c] = GetMinorElement(matrix, r, c);
+			matrixMinor[r][c] = GetMinorElement(matrix, r, c);
 		}
 	}
 	return matrixMinor;
 }
 
-double GetMatrixDet(const MatrixWrap& matrix)
+double GetMatrixDet(const Matrix3x3& matrix)
 {
-	return matrix.items[0][0] * matrix.items[1][1] * matrix.items[2][2] +
-		matrix.items[1][0] * matrix.items[2][1] * matrix.items[0][2] +
-		matrix.items[0][1] * matrix.items[1][2] * matrix.items[2][0] -
-		matrix.items[2][0] * matrix.items[1][1] * matrix.items[0][2] -
-		matrix.items[1][0] * matrix.items[0][1] * matrix.items[2][2] -
-		matrix.items[0][0] * matrix.items[1][2] * matrix.items[2][1];
+	return matrix[0][0] * matrix[1][1] * matrix[2][2] +
+		matrix[1][0] * matrix[2][1] * matrix[0][2] +
+		matrix[0][1] * matrix[1][2] * matrix[2][0] -
+		matrix[2][0] * matrix[1][1] * matrix[0][2] -
+		matrix[1][0] * matrix[0][1] * matrix[2][2] -
+		matrix[0][0] * matrix[1][2] * matrix[2][1];
 }
 
-MatrixWrap GetMatrixTransp(const MatrixWrap& matrix)
+Matrix3x3 GetMatrixTransp(const Matrix3x3& matrix)
 {
-	MatrixWrap matrixTransp;
+	Matrix3x3 matrixTransp;
 	for (size_t r = 0; r < MatrixSize; r++)
 	{
 		for (size_t c = 0; c < MatrixSize; c++)
 		{
-			matrixTransp.items[r][c] = matrix.items[c][r];
+			matrixTransp[r][c] = matrix[c][r];
 		}
 	}
 	return matrixTransp;
 }
 
-MatrixWrap GetMatrixMulConst(const MatrixWrap& matrix, double mul)
+Matrix3x3 GetMatrixMulConst(const Matrix3x3& matrix, double mul)
 {
-	MatrixWrap matrixMul;
+	Matrix3x3 matrixMul;
 	for (size_t r = 0; r < MatrixSize; r++)
 	{
 		for (size_t c = 0; c < MatrixSize; c++)
 		{
-			matrixMul.items[r][c] = matrix.items[r][c] * mul;
-			matrixMul.items[r][c] = fabs(matrixMul.items[r][c]) < 0.000000001 ? 0.0 : matrixMul.items[r][c];
+			matrixMul[r][c] = matrix[r][c] * mul;
 		}
 	}
 	return matrixMul;
 }
 
-MatrixWrap ReadMatrixFromFile(const std::string& fileName)
+Matrix3x3 ReadMatrixFromFile(const std::string& fileName)
 {
 	std::ifstream input;
 	input.open(fileName);
@@ -114,8 +111,8 @@ MatrixWrap ReadMatrixFromFile(const std::string& fileName)
 		throw std::runtime_error("Failed to open '" + fileName + "' for reading");
 	}
 
-	MatrixWrap matrix;
-	for (size_t r = 0; r < MatrixSize; r++)
+	Matrix3x3 matrix;
+	for (Matrix3 &r : matrix)
 	{
 		std::string line;
 		if (!std::getline(input, line))
@@ -125,10 +122,9 @@ MatrixWrap ReadMatrixFromFile(const std::string& fileName)
 
 		std::istringstream lineStream(line);
 
-		for (size_t c = 0; c < MatrixSize; c++)
+		for (double &item : r)
 		{
-			lineStream >> matrix.items[r][c];
-			if (lineStream.fail()) {
+			if (!(lineStream >> item)) {
 				throw std::runtime_error("Incorrect data type for matrix element in input file");
 			}
 		}
@@ -136,12 +132,12 @@ MatrixWrap ReadMatrixFromFile(const std::string& fileName)
 	return matrix;
 }
 
-static MatrixWrap InvertMatrix(const std::string& fileName)
+static Matrix3x3 InvertMatrix(const std::string& fileName)
 {
 	auto matrixSrc = ReadMatrixFromFile(fileName);
 
 	auto det = GetMatrixDet(matrixSrc);
-	if (fabs(det) < 0.000000001)
+	if (fabs(det) < DBL_EPSILON)
 	{
 		throw std::runtime_error("Unable to calculate invert matrix, because matrix determinant equal to zero");
 	}
@@ -157,7 +153,7 @@ int main(int argc, char* argv[])
 
 	try
 	{
-		MatrixWrap matrixInv = InvertMatrix(args->fileName);
+		Matrix3x3 matrixInv = InvertMatrix(args->fileName);
 		PrintMatrix3x3(matrixInv);
 	}
 	catch (const std::runtime_error& ex)
