@@ -31,7 +31,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void PrintMatrix3x3(const Matrix3x3& matrix)
 {
-	for (const Matrix3 &r : matrix)
+	for (const Matrix3& r : matrix)
 	{
 		for (double item : r)
 		{
@@ -112,7 +112,7 @@ Matrix3x3 ReadMatrixFromFile(const std::string& fileName)
 	}
 
 	Matrix3x3 matrix;
-	for (Matrix3 &r : matrix)
+	for (Matrix3& r : matrix)
 	{
 		std::string line;
 		if (!std::getline(input, line))
@@ -122,7 +122,7 @@ Matrix3x3 ReadMatrixFromFile(const std::string& fileName)
 
 		std::istringstream lineStream(line);
 
-		for (double &item : r)
+		for (double& item : r)
 		{
 			if (!(lineStream >> item)) {
 				throw std::runtime_error("Incorrect data type for matrix element in input file");
