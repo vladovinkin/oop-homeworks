@@ -9,8 +9,8 @@
 #include <array>
 
 constexpr int MatrixSize = 3;
-typedef std::array<double, MatrixSize> Matrix3;
-typedef std::array<Matrix3, MatrixSize> Matrix3x3;
+typedef std::array<double, MatrixSize> Vector3;
+typedef std::array<Vector3, MatrixSize> Matrix3x3;
 
 struct Args {
 	std::string fileName;
@@ -31,7 +31,7 @@ std::optional<Args> ParseArgs(int argc, char* argv[])
 
 void PrintMatrix3x3(const Matrix3x3& matrix)
 {
-	for (const Matrix3 &r : matrix)
+	for (const Vector3 &r : matrix)
 	{
 		for (double item : r)
 		{
@@ -112,7 +112,7 @@ Matrix3x3 ReadMatrixFromFile(const std::string& fileName)
 	}
 
 	Matrix3x3 matrix;
-	for (Matrix3 &r : matrix)
+	for (Vector3 &r : matrix)
 	{
 		std::string line;
 		if (!std::getline(input, line))
