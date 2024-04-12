@@ -10,7 +10,7 @@ int main()
 	{
 		std::string line;
 		std::getline(std::cin, line);
-
+		// посмотреть примеры в которых разобраны варианты и прочитать вектор по другому
 		std::cout << ModifyVector(line) << '\n';
 	}
 	catch (const std::runtime_error& ex)

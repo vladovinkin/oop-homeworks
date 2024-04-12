@@ -2,6 +2,7 @@
 
 auto StringToVector(const std::string& line)
 {
+	// сложно
 	std::vector<double> numbers;
 
 	if (!line.empty())
@@ -29,6 +30,7 @@ auto StringToVector(const std::string& line)
 
 double PositiveItemsSum(const std::vector<double>& numbers)
 {
+	// дать другое имя
 	auto NonNegativeValue = [](double sum, double item)
 	{
 		return item > 0.0 ? sum + item : sum;
@@ -39,6 +41,8 @@ double PositiveItemsSum(const std::vector<double>& numbers)
 
 void VectorModifyFunction(std::vector<double>& numbers, double addendum)
 {
+	// цикл заменить на transform
+	
 	bool isEvenItem = true;
 	for (auto& item : numbers)
 	{
@@ -49,6 +53,7 @@ void VectorModifyFunction(std::vector<double>& numbers, double addendum)
 	}
 }
 
+// в именах функций легко запутаться
 void VectorModify(std::vector<double>& numbers)
 {
 	double positiveItemsSum = PositiveItemsSum(numbers);
