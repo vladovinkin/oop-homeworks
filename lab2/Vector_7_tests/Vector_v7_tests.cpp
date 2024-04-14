@@ -8,22 +8,56 @@
 
 SCENARIO("Modifying of empty string gives an empty string")
 {
-	REQUIRE(ModifyVector("").empty());
+	std::vector<double> numbers = {};
+	ModifyVector(numbers);
+	REQUIRE(numbers.empty());
 }
 
 SCENARIO("String with zeros gives zeros result")
 {
-	REQUIRE(ModifyVector("0 0 0 0 0") == "0.000 0.000 0.000 0.000 0.000");
+	std::vector<double> numbers = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+	std::vector<double> numbersResult = { 0.0, 0.0, 0.0, 0.0, 0.0 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
 }
 
 SCENARIO("String with 1 any number gives doubled number")
 {
-	REQUIRE(ModifyVector("0") == "0.000");
-	REQUIRE(ModifyVector("1") == "2.000");
-	REQUIRE(ModifyVector("-1") == "-2.000");
+	std::vector<double> numbers = { 0.0 };
+	std::vector<double> numbersResult = { 0.0 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
+
+	numbers = { 1.0 };
+	numbersResult = { 2.0 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
+
+	numbers = { -1.0 };
+	numbersResult = { -2.0 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
 }
 
 SCENARIO("Modifying string with 2 and more numbers")
 {
-	REQUIRE(ModifyVector("1 -4.456 -0.0234 -2.1 3.57") == "-9.026 -6.670 -0.047 2.000 7.140");
+	std::vector<double> numbers = { -5.436, -6.9876 };
+	std::vector<double> numbersResult = { -10.872, -6.9876 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
+
+	numbers = { 4.456, 1.534 };
+	numbersResult = { -4.456, 8.912 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
+
+	numbers = { 1.0, 2.0, 3.0, 4.0, 5.0 };
+	numbersResult = { -13.0, -11.0, 2.0, 6.0, 10.0 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
+
+	numbers = { 1.0, -4.456, -0.0234, -2.1, 3.57 };
+	numbersResult = { -9.026, -6.67, -0.0468, 2.0, 7.14 };
+	ModifyVector(numbers);
+	REQUIRE(numbers == numbersResult);
 }

@@ -8,10 +8,10 @@ int main()
 {
 	try
 	{
-		std::string line;
-		std::getline(std::cin, line);
-		// посмотреть примеры в которых разобраны варианты и прочитать вектор по другому
-		std::cout << ModifyVector(line) << '\n';
+		// (+) посмотреть примеры в которых разобраны варианты и прочитать вектор по другому
+		std::vector<double> numbers(std::istream_iterator<double>(std::cin), (std::istream_iterator<double>()));
+		ModifyVector(numbers);
+		PrintVector(numbers);
 	}
 	catch (const std::runtime_error& ex)
 	{

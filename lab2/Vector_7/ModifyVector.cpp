@@ -1,84 +1,53 @@
 #include "ModifyVector.h"
 
-auto StringToVector(const std::string& line)
+void ModifyVector(std::vector<double>& numbers)
 {
-	// сложно
-	std::vector<double> numbers;
+	VectorProcessing(numbers);
+	std::sort(numbers.begin(), numbers.end());
+}
 
-	if (!line.empty())
-	{
-		std::istringstream lineStream(line);
-		double item;
-
-		while (!lineStream.eof())
-		{
-			if (!(lineStream >> item)) {
-				throw std::runtime_error("Incorrect data type for matrix element in input file");
-			}
-
-			if (lineStream.bad())
-			{
-				throw std::runtime_error("Failed to read data from input line");
-			}
-
-			numbers.push_back(item);
-		}
-	}
-
-	return numbers;
+// (+) в именах функций легко запутаться
+void VectorProcessing(std::vector<double>& numbers)
+{
+	double positiveItemsSum = PositiveItemsSum(numbers);
+	ChangeVectorItems(numbers, positiveItemsSum);
 }
 
 double PositiveItemsSum(const std::vector<double>& numbers)
 {
-	// дать другое имя
-	auto NonNegativeValue = [](double sum, double item)
+	// (+) дать другое имя
+	auto AddIfPositive = [](double sum, double item)
 	{
 		return item > 0.0 ? sum + item : sum;
 	};
 
-	return std::accumulate(numbers.begin(), numbers.end(), 0.0, NonNegativeValue);
+	return std::accumulate(numbers.begin(), numbers.end(), 0.0, AddIfPositive);
 }
 
-void VectorModifyFunction(std::vector<double>& numbers, double addendum)
+void ChangeVectorItems(std::vector<double>& numbers, double addendum)
 {
-	// цикл заменить на transform
-	
-	bool isEvenItem = true;
-	for (auto& item : numbers)
+	// (+) цикл заменить на transform
+	std::vector<size_t> indices;
+	std::vector<double> result;
+	for (size_t i = 0; i < numbers.size(); i++)
 	{
-		item = isEvenItem
-			? item * 2.0
-			: item - addendum;
-		isEvenItem = !isEvenItem;
-	}
-}
-
-// в именах функций легко запутаться
-void VectorModify(std::vector<double>& numbers)
-{
-	double positiveItemsSum = PositiveItemsSum(numbers);
-	VectorModifyFunction(numbers, positiveItemsSum);
-}
-
-auto VectorToString(const std::vector<double>& numbers)
-{
-	std::stringstream result;
-
-	if (!numbers.empty()) {
-		for (auto i = 0; i < numbers.size(); i++)
-		{
-			result << std::setprecision(3) << std::fixed 
-				<< numbers[i] << (i < numbers.size() - 1 ? " " : "");
-		}
+		indices.push_back(i);
 	}
 
-	return result.str();
+	std::transform(
+		indices.begin(),
+		indices.end(),
+		std::back_inserter(result),
+		[&](size_t i) -> double {
+			return i % 2 == 0
+				? numbers[i] * 2.0
+				: numbers[i] - addendum;
+		});
+
+	numbers = result;
 }
 
-std::string ModifyVector(const std::string& line)
+void PrintVector(const std::vector<double>& numbers)
 {
-	std::vector<double> numbers = StringToVector(line);
-	VectorModify(numbers);
-	std::sort(numbers.begin(), numbers.end());
-	return VectorToString(numbers);
+	copy(numbers.begin(), numbers.end(), std::ostream_iterator<double>(std::cout << std::setprecision(3) << std::fixed, " "));
 }

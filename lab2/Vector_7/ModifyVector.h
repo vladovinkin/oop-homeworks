@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <vector>
 #include <sstream>
@@ -6,9 +7,8 @@
 #include <iomanip>
 #include <algorithm>
 
-std::string ModifyVector(const std::string&);
-auto StringToVector(const std::string &);
+void ModifyVector(std::vector<double>&);
+void VectorProcessing(std::vector<double> &);
 double PositiveItemsSum(const std::vector<double>&);
-void VectorModifyFunction(std::vector<double>&, double);
-void VectorModify(std::vector<double> &);
-auto VectorToString(const std::vector<double> &);
+void ChangeVectorItems(std::vector<double>&, double);
+void PrintVector(const std::vector<double> &);
