@@ -9,12 +9,14 @@ Car::Car()
 
 bool Car::TurnOnEngine()
 {
-	return engineIsRunning_ = true;
+	engineIsRunning_ = true;
+	return true;
 }
 
 bool Car::TurnOffEngine()
 {
-	return engineIsRunning_ = false;
+	engineIsRunning_ = false;
+	return true;
 }
 
 
@@ -22,6 +24,45 @@ bool Car::SetGear(int gear)
 {
 	if (IsTurnedOn())
 	{
+		switch (gear)
+		{
+		case GearReverse:
+			if (speed_ != 0)
+			{
+				return false;
+			}
+			break;
+		case GearDrive1:
+			if (speed_ < 0 || speed_ > 30)
+			{
+				return false;
+			}
+			break;
+		case GearDrive2:
+			if (speed_ < 20 || speed_ > 50)
+			{
+				return false;
+			}
+			break;
+		case GearDrive3:
+			if (speed_ < 30 || speed_ > 60)
+			{
+				return false;
+			}
+			break;
+		case GearDrive4:
+			if (speed_ < 40 || speed_ > 90)
+			{
+				return false;
+			}
+			break;
+		case GearDrive5:
+			if (speed_ < 50 || speed_ > 150)
+			{
+				return false;
+			}
+			break;
+		}
 		gear_ = gear;
 		return true;
 	}
