@@ -11,10 +11,10 @@ SCENARIO("The car is initially unstarted, it does not move, it has zero speed an
 	GIVEN("Car witn not started engine")
 	{
 		Car car;
-		REQUIRE(!car.IsEngineTurnedOn());
+		REQUIRE(!car.IsTurnedOn());
 		CHECK(car.GetDirection() == Direction::STAY_STILL);
 		CHECK(car.GetSpeed() == 0);
-		CHECK(car.);
+		CHECK(car.GetGear() == 0);
 	}
 }
 
@@ -24,46 +24,61 @@ The car's engine is not started initially
 
 2. Если незавёденный двигатель завести, он заведётся
 If you start the engine when it is not running, it will start
+
+3. Если включить включенный двигатель, то он останется включенным
+If you turn on the engine while it is on, it will remain on
 */
 SCENARIO("The car's engine is not started initially and if you start the engine when it is not running, it will start")
 {
 	GIVEN("Car witn not started engine")
 	{
 		Car car;
-		REQUIRE(!car.IsEngineTurnedOn());
+		REQUIRE(!car.IsTurnedOn());
 
 		WHEN("Start engine")
 		{
-			car.TurnOnEngine();
+			REQUIRE(car.TurnOnEngine());
 			THEN("Engine started")
 			{
-				CHECK(car.IsEngineTurnedOn());
+				CHECK(car.IsTurnedOn());
+				CHECK(car.GetDirection() == Direction::STAY_STILL);
+				CHECK(car.GetSpeed() == 0);
+				CHECK(car.GetGear() == 0);
+			}
+
+			AND_WHEN("If you turn on the engine while it is on")
+			{
+				REQUIRE(car.TurnOnEngine());
+				THEN("it will remain on")
+				{
+					CHECK(car.IsTurnedOn());
+				}
 			}
 		}
 	}
 }
 
 /*
-3. Когда двигатель не заведён, включена нейтральная передача
+4. Когда двигатель не заведён, включена нейтральная передача
 
-4. Если при незаведённом двигателе включить нейтрельную передачу, она включится
+5. Если при незаведённом двигателе включить нейтрельную передачу, она включится
 If you turn on the neutral gear when the engine is not running, it will turn on
 
-5. Если при незаведённом двигетеле включить передачу, отличную от нейтральной, она не включится
+6. Если при незаведённом двигетеле включить передачу, отличную от нейтральной, она не включится
 If you engage a gear other than neutral when the engine is not running, it will not engage
 */
-SCENARIO("Сhanging gears in a car with the engine not running")
+SCENARIO("Changing gears in a car with the engine not running")
 {
 	GIVEN("Car witn not started engine")
 	{
 		Car car;
-		REQUIRE(!car.IsEngineTurnedOn());
-
+		REQUIRE(!car.IsTurnedOn());
 		WHEN("If you turn on the neutral gear when the engine is not running")
 		{
+			REQUIRE(car.SetGear(GearNeutral));
 			THEN("it will turn on the neutral gear")
 			{
-				CHECK(car.SetGear(GearNeutral));
+				CHECK(car.GetGear() == GearNeutral);
 			}
 		}
 
@@ -82,11 +97,11 @@ SCENARIO("Сhanging gears in a car with the engine not running")
 	}
 }
 
-
 /*
-5. Если у остановленного автомобиля на нейтральной передаче выключить двигатель, он заглохнет
+7. Если у остановленного автомобиля на нейтральной передаче выключить двигатель, он заглохнет
 If you turn off the engine of a stationary vehicle in neutral, it will turn off.
 
-6. Если у движущегося автомобиля на любой передаче выключить двигатель, он не заглохнет
+8. Если у движущегося автомобиля на любой передаче выключить двигатель, он не заглохнет
 If you turn off the engine of a moving car in any gear, it will not turn off
 */
+

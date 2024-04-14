@@ -28,10 +28,10 @@ class Car {
 		bool SetGear(int gear);
 		bool SetSpeed(int speed);
 
-		bool IsEngineTurnedOn();
-		Direction GetDirection();
+		bool IsTurnedOn();
 		int GetGear();
 		int GetSpeed();
+		Direction GetDirection();
 	private:
 		int gear_;
 		int speed_;
