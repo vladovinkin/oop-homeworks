@@ -1,4 +1,6 @@
 ﻿#pragma once
+#include <cmath>
+#include <set>
 
 enum class Direction {
 	BACKWARD,
@@ -20,6 +22,9 @@ constexpr int GearDrive3 = 3;
 constexpr int GearDrive4 = 4;
 constexpr int GearDrive5 = 5;
 
+constexpr int SpeedMin = 0;
+constexpr int SpeedMax = 150;
+
 class Car {
 	public:
 		Car();
@@ -36,4 +41,13 @@ class Car {
 		int gear_;
 		int speed_;
 		bool engineIsRunning_;
+		std::set<int> possibleGears_{
+			GearReverse,
+			GearNeutral,
+			GearDrive1,
+			GearDrive2,
+			GearDrive3,
+			GearDrive4,
+			GearDrive5,
+		};
 };

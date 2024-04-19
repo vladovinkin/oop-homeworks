@@ -15,67 +15,128 @@ bool Car::TurnOnEngine()
 
 bool Car::TurnOffEngine()
 {
-	engineIsRunning_ = false;
-	return true;
-}
-
-
-bool Car::SetGear(int gear)
-{
-	if (IsTurnedOn())
+	if (speed_ == 0 && gear_ == GearNeutral)
 	{
-		switch (gear)
-		{
-		case GearReverse:
-			if (speed_ != 0)
-			{
-				return false;
-			}
-			break;
-		case GearDrive1:
-			if (speed_ < 0 || speed_ > 30)
-			{
-				return false;
-			}
-			break;
-		case GearDrive2:
-			if (speed_ < 20 || speed_ > 50)
-			{
-				return false;
-			}
-			break;
-		case GearDrive3:
-			if (speed_ < 30 || speed_ > 60)
-			{
-				return false;
-			}
-			break;
-		case GearDrive4:
-			if (speed_ < 40 || speed_ > 90)
-			{
-				return false;
-			}
-			break;
-		case GearDrive5:
-			if (speed_ < 50 || speed_ > 150)
-			{
-				return false;
-			}
-			break;
-		}
-		gear_ = gear;
+		engineIsRunning_ = false;
 		return true;
 	}
-	else
+	return false;
+}
+
+bool Car::SetGear(int gear)
+{	
+	if (possibleGears_.count(gear))
 	{
-		return gear == GearNeutral;
+		if (IsTurnedOn())
+		{
+			switch (gear)
+			{
+			case GearReverse:
+				if (speed_ != 0)
+				{
+					return false;
+				}
+				break;
+			case GearDrive1:
+				if (speed_ < 0 || speed_ > 30)
+				{
+					return false;
+				}
+				break;
+			case GearDrive2:
+				if (speed_ < 20 || speed_ > 50)
+				{
+					return false;
+				}
+				break;
+			case GearDrive3:
+				if (speed_ < 30 || speed_ > 60)
+				{
+					return false;
+				}
+				break;
+			case GearDrive4:
+				if (speed_ < 40 || speed_ > 90)
+				{
+					return false;
+				}
+				break;
+			case GearDrive5:
+				if (speed_ < 50 || speed_ > 150)
+				{
+					return false;
+				}
+				break;
+			}
+			gear_ = gear;
+			return true;
+		}
+		else
+		{
+			return gear == GearNeutral;
+		}
 	}
+	return false;
 }
 
 bool Car::SetSpeed(int speed)
 {
-	speed_ = speed;
-	return true;
+	if (speed >= SpeedMin && speed <= SpeedMax)
+	{
+		if (IsTurnedOn())
+		{
+			switch (gear_)
+			{
+			case GearReverse:
+				if (speed < 0 || speed > 20)
+				{
+					return false;
+				}
+				break;
+			case GearDrive1:
+				if (speed < 0 || speed > 30)
+				{
+					return false;
+				}
+				break;
+			case GearDrive2:
+				if (speed < 20 || speed > 50)
+				{
+					return false;
+				}
+				break;
+			case GearDrive3:
+				if (speed < 30 || speed > 60)
+				{
+					return false;
+				}
+				break;
+			case GearDrive4:
+				if (speed < 40 || speed > 90)
+				{
+					return false;
+				}
+				break;
+			case GearDrive5:
+				if (speed < 50 || speed > 150)
+				{
+					return false;
+				}
+				break;
+			case GearNeutral:
+				if (speed > abs(speed_))
+				{
+					return false;
+				}
+			}
+			speed_ = (gear_ == GearReverse || speed_ < 0)
+				? -speed
+				: speed;
+
+			return true;
+		}
+	}
+	return false;
 }
 
 bool Car::IsTurnedOn()
@@ -90,7 +151,7 @@ int Car::GetGear()
 
 int Car::GetSpeed()
 {
-	return speed_;
+	return std::abs(speed_);
 }
 
 Direction Car::GetDirection()

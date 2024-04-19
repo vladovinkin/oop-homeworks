@@ -198,15 +198,264 @@ SCENARIO("Changing gears with a stopped car with the engine running in neutral g
 	}
 }
 
+/*
+* Включение задней передачи, увеличение и уменьшение скорости
+*/
+SCENARIO("Engaging reverse gear, increasing and decreasing speed")
+{
+	GIVEN("Car witn started engine on reverse gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(GearReverse));
+		REQUIRE(car.GetDirection() == Direction::STAY_STILL);
+		REQUIRE(car.GetSpeed() == 0);
 
+		WHEN("Speed change within acceptable limits")
+		{
+			THEN("speed will changed")
+			{
+				REQUIRE(car.SetSpeed(20));
+				CHECK(car.GetDirection() == Direction::BACKWARD);
+				CHECK(car.GetSpeed() == 20);
 
+				AND_WHEN("change gear to Neutral")
+				{
+					REQUIRE(car.SetSpeed(15));
+					REQUIRE(!car.SetSpeed(25));
 
-
-
+					REQUIRE(car.SetGear(GearNeutral));
+					REQUIRE(car.SetSpeed(10));
+					CHECK(car.GetDirection() == Direction::BACKWARD);
+					REQUIRE(!car.SetSpeed(15));
+				}
+			}
+		}
+	}
+}
 
 
 /*
-0. Если у движущегося автомобиля на любой передаче выключить двигатель, он не заглохнет
+Если у движущегося автомобиля на любой передаче выключить двигатель, он не выключится
 If you turn off the engine of a moving car in any gear, it will not turn off
 */
+SCENARIO("If you turn off the engine of a moving car in any gear, it will not turn off")
+{
+	GIVEN("Moving car witn started engine on first gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(GearDrive1));
+		REQUIRE(car.SetSpeed(15));
 
+		WHEN("attempt turn off the engine of a moving car")
+		{
+			REQUIRE(!car.TurnOffEngine());
+			THEN("it will not turn off")
+			{
+				CHECK(car.IsTurnedOn());
+			}
+		}
+	}
+}
+
+// Разгон на 1 передаче до допустимой и недопустимой скорости
+SCENARIO("Acceleration in 1st gear to permissible and unacceptable speed")
+{
+	GIVEN("Stopped car witn started engine in first gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(GearDrive1));
+		REQUIRE(car.GetSpeed() == 0);
+
+		WHEN("Set speed 0")
+		{
+			REQUIRE(car.SetSpeed(0));
+			THEN("Speed will remain 0")
+			{
+				CHECK(car.GetSpeed() == 0);
+			}
+		}
+
+		WHEN("Set speed -1")
+		{
+			REQUIRE(!car.SetSpeed(-1));
+			THEN("Speed will remain 0")
+			{
+				CHECK(car.GetSpeed() == 0);
+			}
+		}
+
+		WHEN("Set speed 15")
+		{
+			REQUIRE(car.SetSpeed(15));
+			THEN("Speed will set to 15")
+			{
+				CHECK(car.GetSpeed() == 15);
+			}
+		}
+
+		WHEN("Set speed 30")
+		{
+			REQUIRE(car.SetSpeed(30));
+			THEN("Speed will set to 30")
+			{
+				CHECK(car.GetSpeed() == 30);
+			}
+		}
+
+		WHEN("Set speed 31")
+		{
+			REQUIRE(!car.SetSpeed(31));
+			THEN("Speed will remain 0")
+			{
+				CHECK(car.GetSpeed() == 0);
+			}
+		}
+	}
+}
+
+// Изменение скорости движущегося автомобиля на нейтральной передаче
+SCENARIO("Changing the speed of a moving car witn started engine in neutral gear")
+{
+	GIVEN("Car witn started engine moving forward in neutral gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(GearDrive1));
+		REQUIRE(car.SetSpeed(20));
+		REQUIRE(car.SetGear(GearNeutral));
+		REQUIRE(car.GetSpeed() == 20);
+
+		WHEN("Increase speed")
+		{
+			REQUIRE(!car.SetSpeed(30));
+			THEN("Speed will not set")
+			{
+				CHECK(car.GetSpeed() == 20);
+			}
+		}
+
+		WHEN("Decrease speed")
+		{
+			REQUIRE(car.SetSpeed(10));
+			THEN("Speed will set")
+			{
+				CHECK(car.GetSpeed() == 10);
+			}
+		}
+
+		WHEN("Decrease speed to negative value")
+		{
+			REQUIRE(!car.SetSpeed(-1));
+			THEN("Speed will not set")
+			{
+				CHECK(car.GetSpeed() == 20);
+			}
+		}
+
+		WHEN("Set speed to current value")
+		{
+			REQUIRE(car.SetSpeed(20));
+			THEN("Speed will remain the currentn value")
+			{
+				CHECK(car.GetSpeed() == 20);
+			}
+		}
+	}
+
+	GIVEN("Car moving backward in neutral gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(GearReverse));
+		REQUIRE(car.SetSpeed(10));
+		REQUIRE(car.SetGear(GearNeutral));
+		REQUIRE(car.GetSpeed() == 10);
+		REQUIRE(car.GetDirection() == Direction::BACKWARD);
+
+		WHEN("Increase speed")
+		{
+			REQUIRE(!car.SetSpeed(20));
+			THEN("Speed will not set")
+			{
+				CHECK(car.GetSpeed() == 10);
+				REQUIRE(car.GetDirection() == Direction::BACKWARD);
+			}
+		}
+
+		WHEN("Decrease speed")
+		{
+			REQUIRE(car.SetSpeed(5));
+			THEN("Speed will set")
+			{
+				CHECK(car.GetSpeed() == 5);
+				REQUIRE(car.GetDirection() == Direction::BACKWARD);
+			}
+		}
+
+		WHEN("Decrease speed to negative value")
+		{
+			REQUIRE(!car.SetSpeed(-1));
+			THEN("Speed will not set")
+			{
+				CHECK(car.GetSpeed() == 10);
+				REQUIRE(car.GetDirection() == Direction::BACKWARD);
+			}
+		}
+
+		WHEN("Set speed to current value")
+		{
+			REQUIRE(car.SetSpeed(10));
+			THEN("Speed will remain the currentn value")
+			{
+				CHECK(car.GetSpeed() == 10);
+				REQUIRE(car.GetDirection() == Direction::BACKWARD);
+			}
+		}
+	}
+}
+
+// Включение передач на различных скоростях
+SCENARIO("Engaging gears within acceptable speed ranges")
+{
+	GIVEN("Stopped car witn started engine in neutral gear")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+
+		CHECK(car.GetGear() == GearNeutral);
+		CHECK(car.GetDirection() == Direction::STAY_STILL);
+		CHECK(car.GetSpeed() == 0);
+
+		WHEN("Engage first gear ")
+		{
+			REQUIRE(car.SetGear(GearDrive1));
+			THEN("Gear engaged")
+			{
+				CHECK(car.GetGear() == GearDrive1);
+			}
+		}
+	}
+}
+
+/* Template
+ SCENARIO("")
+{
+	GIVEN("")
+	{
+		Car car;
+		REQUIRE(car.TurnOnEngine());
+	
+		WHEN("")
+		{
+			REQUIRE();
+			THEN("")
+			{
+				CHECK();
+			}
+		}
+	}
+}
+*/
