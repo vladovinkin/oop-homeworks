@@ -1,91 +1,104 @@
-﻿#include "car.h"
+﻿#include "stdafx.h"
+#include "car.h"
 
-Car::Car()
+CCar::CCar()
 {
-	engineIsRunning_ = false;
-	gear_ = 0;
-	speed_ = 0;
+	m_engineIsRunning = false;
+	m_gear = 0;
+	m_speed = 0;
 }
 
-bool Car::TurnOnEngine()
+bool CCar::TurnOnEngine()
 {
-	engineIsRunning_ = true;
-	return true;
-}
-
-bool Car::TurnOffEngine()
-{
-	if (speed_ == 0 && gear_ == GearNeutral)
+	if (m_speed == 0 && m_gear == GearNeutral)
 	{
-		engineIsRunning_ = false;
+		m_engineIsRunning = true;
 		return true;
 	}
 	return false;
 }
 
-bool Car::SetGear(int gear)
-{	
-	if (possibleGears_.count(gear))
+bool CCar::TurnOffEngine()
+{
+	if (m_speed == 0 && m_gear == GearNeutral)
 	{
-		if (IsTurnedOn())
+		m_engineIsRunning = false;
+		return true;
+	}
+	return false;
+}
+
+bool CCar::SetGear(int gear)
+{	// сделать таблицу скоростей 
+	if (gear >= GearReverse && gear <= GearDrive5)
+	{
+		if (gear == m_gear)
 		{
-			switch (gear)
-			{
-			case GearReverse:
-				if (speed_ != 0)
-				{
-					return false;
-				}
-				break;
-			case GearDrive1:
-				if (speed_ < 0 || speed_ > 30)
-				{
-					return false;
-				}
-				break;
-			case GearDrive2:
-				if (speed_ < 20 || speed_ > 50)
-				{
-					return false;
-				}
-				break;
-			case GearDrive3:
-				if (speed_ < 30 || speed_ > 60)
-				{
-					return false;
-				}
-				break;
-			case GearDrive4:
-				if (speed_ < 40 || speed_ > 90)
-				{
-					return false;
-				}
-				break;
-			case GearDrive5:
-				if (speed_ < 50 || speed_ > 150)
-				{
-					return false;
-				}
-				break;
-			}
-			gear_ = gear;
 			return true;
 		}
 		else
 		{
-			return gear == GearNeutral;
+			if (IsTurnedOn())
+			{
+				switch (gear)
+				{
+				case GearReverse:
+					if (m_speed != 0)
+					{
+						return false;
+					}
+					break;
+				case GearDrive1:
+					if (m_speed < 0 || m_speed > 30)
+					{
+						return false;
+					}
+					break;
+				case GearDrive2:
+					if (m_speed < 20 || m_speed > 50)
+					{
+						return false;
+					}
+					break;
+				case GearDrive3:
+					if (m_speed < 30 || m_speed > 60)
+					{
+						return false;
+					}
+					break;
+				case GearDrive4:
+					// убедться что все значимые аспекты покрыты тестами
+					if (m_speed < 40 || m_speed > 90)
+					{
+						return false;
+					}
+					break;
+				case GearDrive5:
+					if (m_speed < 50 || m_speed > 150)
+					{
+						return false;
+					}
+					break;
+				}
+				m_gear = gear;
+				return true;
+			}
+			else
+			{
+				return gear == GearNeutral;
+			}
 		}
 	}
 	return false;
 }
 
-bool Car::SetSpeed(int speed)
+bool CCar::SetSpeed(int speed)
 {
 	if (speed >= SpeedMin && speed <= SpeedMax)
 	{
 		if (IsTurnedOn())
 		{
-			switch (gear_)
+			switch (m_gear)
 			{
 			case GearReverse:
 				if (speed < 0 || speed > 20)
@@ -124,12 +137,12 @@ bool Car::SetSpeed(int speed)
 				}
 				break;
 			case GearNeutral:
-				if (speed > abs(speed_))
+				if (speed > abs(m_speed))
 				{
 					return false;
 				}
 			}
-			speed_ = (gear_ == GearReverse || speed_ < 0)
+			m_speed = (m_gear == GearReverse || m_speed < 0)
 				? -speed
 				: speed;
 
@@ -139,26 +152,26 @@ bool Car::SetSpeed(int speed)
 	return false;
 }
 
-bool Car::IsTurnedOn()
+bool CCar::IsTurnedOn() const
 {
-	return engineIsRunning_;
+	return m_engineIsRunning;
 }
 
-int Car::GetGear()
+int CCar::GetGear() const
 {
-	return gear_;
+	return m_gear;
 }
 
-int Car::GetSpeed()
+int CCar::GetSpeed() const
 {
-	return std::abs(speed_);
+	return std::abs(m_speed);
 }
 
-Direction Car::GetDirection()
+Direction CCar::GetDirection() const
 {
-	return speed_ < 0
+	return m_speed < 0
 		? Direction::BACKWARD
-		: (speed_ > 0
+		: (m_speed > 0
 			? Direction::FORWARD
 			: Direction::STAY_STILL);
 }

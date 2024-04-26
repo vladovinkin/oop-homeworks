@@ -14,7 +14,7 @@ SCENARIO("The car is initially unstarted, it does not move, it has zero speed an
 {
 	GIVEN("Car witn not started engine")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(!car.IsTurnedOn());
 		CHECK(car.GetDirection() == Direction::STAY_STILL);
 		CHECK(car.GetSpeed() == 0);
@@ -48,7 +48,7 @@ SCENARIO("The car's engine is not started initially and if you start the engine 
 {
 	GIVEN("Car witn not started engine")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(!car.IsTurnedOn());
 
 		WHEN("Start engine")
@@ -100,7 +100,7 @@ SCENARIO("Changing gears in a car with the engine not running")
 {
 	GIVEN("Car witn not started engine")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(!car.IsTurnedOn());
 		WHEN("If you turn on the neutral gear when the engine is not running")
 		{
@@ -143,7 +143,7 @@ SCENARIO("Changing gears with a stopped car with the engine running in neutral g
 {
 	GIVEN("The car is initially started, it does not move, it has zero speed and the neutral gear is engaged")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		CHECK(car.GetDirection() == Direction::STAY_STILL);
 		CHECK(car.GetSpeed() == 0);
@@ -205,7 +205,7 @@ SCENARIO("Engaging reverse gear, increasing and decreasing speed")
 {
 	GIVEN("Car witn started engine on reverse gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		REQUIRE(car.SetGear(GearReverse));
 		REQUIRE(car.GetDirection() == Direction::STAY_STILL);
@@ -243,7 +243,7 @@ SCENARIO("If you turn off the engine of a moving car in any gear, it will not tu
 {
 	GIVEN("Moving car witn started engine on first gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		REQUIRE(car.SetGear(GearDrive1));
 		REQUIRE(car.SetSpeed(15));
@@ -264,7 +264,7 @@ SCENARIO("Acceleration in 1st gear to permissible and unacceptable speed")
 {
 	GIVEN("Stopped car witn started engine in first gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		REQUIRE(car.SetGear(GearDrive1));
 		REQUIRE(car.GetSpeed() == 0);
@@ -321,7 +321,7 @@ SCENARIO("Changing the speed of a moving car witn started engine in neutral gear
 {
 	GIVEN("Car witn started engine moving forward in neutral gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		REQUIRE(car.SetGear(GearDrive1));
 		REQUIRE(car.SetSpeed(20));
@@ -367,7 +367,7 @@ SCENARIO("Changing the speed of a moving car witn started engine in neutral gear
 
 	GIVEN("Car moving backward in neutral gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 		REQUIRE(car.SetGear(GearReverse));
 		REQUIRE(car.SetSpeed(10));
@@ -414,6 +414,11 @@ SCENARIO("Changing the speed of a moving car witn started engine in neutral gear
 				REQUIRE(car.GetDirection() == Direction::BACKWARD);
 			}
 		}
+
+		WHEN("Set first gear")
+		{
+			REQUIRE(!car.SetGear(GearDrive1));
+		}
 	}
 }
 
@@ -422,14 +427,47 @@ SCENARIO("Engaging gears within acceptable speed ranges")
 {
 	GIVEN("Stopped car witn started engine in neutral gear")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 
 		CHECK(car.GetGear() == GearNeutral);
 		CHECK(car.GetDirection() == Direction::STAY_STILL);
 		CHECK(car.GetSpeed() == 0);
 
-		WHEN("Engage first gear ")
+		WHEN("Engage reverse gear")
+		{
+			REQUIRE(car.SetGear(GearReverse));
+			THEN("Gear engaged")
+			{
+				CHECK(car.GetGear() == GearReverse);
+			}
+
+			AND_WHEN("Engage current gear (speed: 0)")
+			{
+				CHECK(car.GetGear() == GearReverse);
+				REQUIRE(car.SetGear(GearReverse));
+				THEN("Gear will remain the current value")
+				{
+					CHECK(car.GetGear() == GearReverse);
+				}
+			}
+
+			AND_WHEN("Engage current gear (speed: 10)")
+			{
+				REQUIRE(car.SetSpeed(10));
+				CHECK(car.GetGear() == GearReverse);
+				CHECK(car.GetDirection() == Direction::BACKWARD);
+				REQUIRE(car.SetGear(GearReverse));
+				THEN("Gear will remain the current value")
+				{
+					CHECK(car.GetGear() == GearReverse);
+				}
+			}
+
+			
+		}
+
+		WHEN("Engage first gear")
 		{
 			REQUIRE(car.SetGear(GearDrive1));
 			THEN("Gear engaged")
@@ -445,7 +483,7 @@ SCENARIO("Engaging gears within acceptable speed ranges")
 {
 	GIVEN("")
 	{
-		Car car;
+		CCar car;
 		REQUIRE(car.TurnOnEngine());
 	
 		WHEN("")
@@ -454,6 +492,14 @@ SCENARIO("Engaging gears within acceptable speed ranges")
 			THEN("")
 			{
 				CHECK();
+			}
+
+			AND_WHEN("")
+			{
+				THEN("")
+				{
+
+				}
 			}
 		}
 	}

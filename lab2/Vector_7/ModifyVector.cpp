@@ -3,6 +3,7 @@
 void ModifyVector(std::vector<double>& numbers)
 {
 	VectorProcessing(numbers);
+	// sort вынести в вывод
 	std::sort(numbers.begin(), numbers.end());
 }
 

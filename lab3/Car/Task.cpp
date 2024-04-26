@@ -1,10 +1,26 @@
 ﻿// Task.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include <iostream>
+#include "stdafx.h"
 #include "car.h"
+#include "driver.h"
 
 int main()
 {
+    setlocale(LC_ALL, "rus");
+
+    CCar car;
+    CDriver driver(car, std::cin, std::cout);
+    
+	while (!std::cin.eof() && !std::cin.fail())
+	{
+		std::cout << "\x1b[97m>\x1b[0m ";
+		if (!driver.HandleCommand())
+		{
+			std::cout << "Unknown or inapplicable command!\n";
+		}
+		std::cout << '\n';
+	}
+
     return 0;
 }

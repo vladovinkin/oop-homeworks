@@ -1,17 +1,10 @@
 ﻿#pragma once
-#include <cmath>
-#include <set>
 
-enum class Direction {
+enum class Direction
+{
 	BACKWARD,
 	STAY_STILL,
 	FORWARD,
-};
-
-struct Info {
-	int gear;
-	int speed;
-	bool engineIsRunning;
 };
 
 constexpr int GearReverse = -1;
@@ -25,29 +18,21 @@ constexpr int GearDrive5 = 5;
 constexpr int SpeedMin = 0;
 constexpr int SpeedMax = 150;
 
-class Car {
+class CCar
+{
 	public:
-		Car();
+		CCar();
 		bool TurnOnEngine();
 		bool TurnOffEngine();
 		bool SetGear(int gear);
 		bool SetSpeed(int speed);
 
-		bool IsTurnedOn();
-		int GetGear();
-		int GetSpeed();
-		Direction GetDirection();
+		bool IsTurnedOn() const;
+		int GetGear() const;
+		int GetSpeed() const;
+		Direction GetDirection() const;
 	private:
-		int gear_;
-		int speed_;
-		bool engineIsRunning_;
-		std::set<int> possibleGears_{
-			GearReverse,
-			GearNeutral,
-			GearDrive1,
-			GearDrive2,
-			GearDrive3,
-			GearDrive4,
-			GearDrive5,
-		};
+		int m_gear;
+		int m_speed;
+		bool m_engineIsRunning;
 };
