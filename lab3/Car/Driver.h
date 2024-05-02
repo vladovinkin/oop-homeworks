@@ -9,15 +9,33 @@ class CDriver
 public:
 	CDriver(CCar& car, std::istream& input, std::ostream& output);
 	bool HandleCommand();
+	static std::string Colorer(const std::string& strn, const std::string& color)
+	{
+		std::map<std::string, unsigned> colors
+		{
+			{"red", 91},
+			{"green", 92},
+			{"yellow", 93},
+			{"blue", 94},
+			{"magenta", 95},
+			{"cyan", 96},
+			{"white", 97},
+		};
 
-	// Избавляемся от предупреждения компилятора о том, что он не сможет сгенерировать оператор присваивания
-	 //CDriver& operator=(const CDriver &) = delete;
-private: // СДЕЛАТЬ МЕТОДЫ КОНСТАНТНЫМИ
-	bool EngineOn(std::istream& args);
-	bool EngineOff(std::istream& args);
-	bool Info(std::istream& args);
-	bool SetGear(std::istream& args);
-	bool SetSpeed(std::istream& args);
+		if (colors.contains(color))
+		{
+			return strn;
+			return "\x1b[" + colors[color] + 'm' + strn + "\x1b[0m";
+		}
+
+		return strn;
+	}
+private: // (+)сделать методы константными
+	bool EngineOn(std::istream& args) const;
+	bool EngineOff(std::istream& args) const;
+	bool Info(std::istream& args) const;
+	bool SetGear(std::istream& args) const;
+	bool SetSpeed(std::istream& args) const;
 private:
 	// функция-обработчик команды пользователя.
 	// Возвращает true, если команда распознана и false, если были ошибки

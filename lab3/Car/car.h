@@ -18,6 +18,15 @@ constexpr int GearDrive5 = 5;
 constexpr int SpeedMin = 0;
 constexpr int SpeedMax = 150;
 
+const int GearSpeedLimit[6][2]{
+	{0, 0},
+	{0, 30},
+	{20, 50},
+	{30, 60},
+	{40, 90},
+	{50, 150},
+};
+
 class CCar
 {
 	public:
