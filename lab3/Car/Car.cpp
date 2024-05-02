@@ -36,20 +36,35 @@ bool CCar::SetGear(int gear)
 		return true;
 	}
 
-	if (IsTurnedOn())
+	if (gear == GearNeutral)
 	{
-		if (gear == GearReverse && m_speed != 0)
-		{
-			return false;
-		}
-
-		if (gear >= GearDrive1 && gear <= GearDrive5 && (m_speed < GearSpeedLimit[gear][0] || m_speed > GearSpeedLimit[gear][1]))
-		{
-			return false;
-		}
-
 		m_gear = gear;
 		return true;
+	}
+
+	if (IsTurnedOn())
+	{
+		if (gear == GearReverse)
+		{
+			if (m_speed == 0)
+			{
+				m_gear = gear;
+			}
+			return m_speed == 0;
+		}
+
+		if (gear >= GearDrive1 && gear <= GearDrive5)
+		{
+			if (m_speed < GearSpeedLimit[gear][0] || m_speed > GearSpeedLimit[gear][1])
+			{
+				return false;
+			}
+			else
+			{
+				m_gear = gear;
+				return true;
+			}
+		}
 	}
 	else
 	{
