@@ -17,7 +17,7 @@ int main()
 		std::cout << CDriver::Colorer("> ", White);
 		if (!driver.HandleCommand())
 		{
-			std::cout << "Unknown or inapplicable command!\n";
+			std::cout << CDriver::Colorer("Unknown or inapplicable command!", Red) + '\n';
 		}
 		std::cout << '\n';
 	}

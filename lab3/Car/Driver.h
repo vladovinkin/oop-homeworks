@@ -11,7 +11,7 @@ constexpr int Cyan = 96;
 constexpr int White = 97;
 
 class CCar;
-// не выводить лишнего сообщения об ошибке
+// (+) не выводить лишнего сообщения об ошибке
 class CDriver
 {
 public:

@@ -75,6 +75,10 @@ bool CCar::SetGear(int gear)
 
 bool CCar::SetSpeed(int speed)
 {
+	if (!IsTurnedOn() && speed == 0)
+	{
+		return true;
+	}
 	if (speed >= SpeedMin && speed <= SpeedMax && IsTurnedOn())
 	{
 		if (m_gear == GearNeutral && speed > abs(m_speed) || m_gear == GearReverse && (speed < 0 || speed > 20))

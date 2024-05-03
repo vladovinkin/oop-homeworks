@@ -44,18 +44,16 @@ bool CDriver::EngineOn(std::istream&) const
 	if (m_car.IsTurnedOn())
 	{
 		m_output << "Engine is " << CDriver::Colorer("already turned on", Yellow) << '\n';
-		return true;
 	}
 	else
 	{
 		if (m_car.TurnOnEngine())
 		{
 			m_output << "Engine is " << CDriver::Colorer("turned on", Yellow) << '\n';
-			return true;
 		}
 	}
 	m_output << CDriver::Colorer("Unable to turn on the engine", Red) << '\n';
-	return false;
+	return true;
 }
 
 bool CDriver::EngineOff(std::istream&) const
@@ -63,34 +61,33 @@ bool CDriver::EngineOff(std::istream&) const
 	if (!m_car.IsTurnedOn())
 	{
 		m_output << "Engine is " << CDriver::Colorer("already turned off", Yellow) << '\n';
-		return true;
 	}
 	else
 	{
 		if (m_car.TurnOffEngine())
 		{
 			m_output << "Engine is " << CDriver::Colorer("turned off", Yellow) << '\n';
-			return true;
 		}
 	}
 	m_output << CDriver::Colorer("Unable to turn off the engine", Red) << '\n';
-	return false;
+	return true;
 }
 
 bool CDriver::SetGear(std::istream &strm) const
 {
 	int arg;
 
-	strm >> arg;
-
-	if (m_car.SetGear(arg))
-	{ // (+) сделать код более читаемым
-		m_output << "Gear set to " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
-		return true;
-	}
-	else
+	if (strm >> arg)
 	{
-		m_output << CDriver::Colorer("Unable to set gear " + to_string(arg), Red) << '\n';
+		if (m_car.SetGear(arg))
+		{ // (+) сделать код более читаемым
+			m_output << "Gear set to " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
+		}
+		else
+		{
+			m_output << CDriver::Colorer("Unable to set gear " + to_string(arg), Red) << '\n';
+		}
+		return true;
 	}
 	return false;
 }
@@ -99,16 +96,17 @@ bool CDriver::SetSpeed(std::istream& strm) const
 {
 	int arg;
 
-	strm >> arg;
-
-	if (m_car.SetSpeed(arg))
+	if (strm >> arg)
 	{
-		m_output << "Now speed is " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
+		if (m_car.SetSpeed(arg))
+		{
+			m_output << "Now speed is " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
+		}
+		else
+		{
+			m_output << CDriver::Colorer("Unable to set speed to " + to_string(arg), Red) << '\n';
+		}
 		return true;
-	}
-	else
-	{
-		m_output << CDriver::Colorer("Unable to set speed to " + to_string(arg), Red) << '\n';
 	}
 	return false;
 }
