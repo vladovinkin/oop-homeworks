@@ -44,12 +44,14 @@ bool CDriver::EngineOn(std::istream&) const
 	if (m_car.IsTurnedOn())
 	{
 		m_output << "Engine is " << CDriver::Colorer("already turned on", Yellow) << '\n';
+		return true;
 	}
 	else
 	{
 		if (m_car.TurnOnEngine())
 		{
 			m_output << "Engine is " << CDriver::Colorer("turned on", Yellow) << '\n';
+			return true;
 		}
 	}
 	m_output << CDriver::Colorer("Unable to turn on the engine", Red) << '\n';
@@ -61,12 +63,14 @@ bool CDriver::EngineOff(std::istream&) const
 	if (!m_car.IsTurnedOn())
 	{
 		m_output << "Engine is " << CDriver::Colorer("already turned off", Yellow) << '\n';
+		return true;
 	}
 	else
 	{
 		if (m_car.TurnOffEngine())
 		{
 			m_output << "Engine is " << CDriver::Colorer("turned off", Yellow) << '\n';
+			return true;
 		}
 	}
 	m_output << CDriver::Colorer("Unable to turn off the engine", Red) << '\n';
