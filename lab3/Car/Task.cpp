@@ -14,7 +14,7 @@ int main()
     
 	while (!std::cin.eof() && !std::cin.fail())
 	{
-		std::cout << CDriver::Colorer("> ", "white");
+		std::cout << CDriver::Colorer("> ", White);
 		if (!driver.HandleCommand())
 		{
 			std::cout << "Unknown or inapplicable command!\n";

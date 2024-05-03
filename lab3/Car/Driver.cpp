@@ -43,18 +43,18 @@ bool CDriver::EngineOn(std::istream&) const
 {
 	if (m_car.IsTurnedOn())
 	{
-		m_output << "Engine is" << CDriver::Colorer("already turned on", "yellow") << '\n';
+		m_output << "Engine is " << CDriver::Colorer("already turned on", Yellow) << '\n';
 		return true;
 	}
 	else
 	{
 		if (m_car.TurnOnEngine())
 		{
-			m_output << "Engine is" << CDriver::Colorer("turned on", "yellow") << '\n';
+			m_output << "Engine is " << CDriver::Colorer("turned on", Yellow) << '\n';
 			return true;
 		}
 	}
-	m_output << CDriver::Colorer("Unable to turn on the engine", "red") << '\n';
+	m_output << CDriver::Colorer("Unable to turn on the engine", Red) << '\n';
 	return false;
 }
 
@@ -62,18 +62,18 @@ bool CDriver::EngineOff(std::istream&) const
 {
 	if (!m_car.IsTurnedOn())
 	{
-		m_output << "Engine is" << CDriver::Colorer("already turned off", "yellow") << '\n';
+		m_output << "Engine is " << CDriver::Colorer("already turned off", Yellow) << '\n';
 		return true;
 	}
 	else
 	{
 		if (m_car.TurnOffEngine())
 		{
-			m_output << "Engine is" << CDriver::Colorer("turned off", "yellow") << '\n';
+			m_output << "Engine is " << CDriver::Colorer("turned off", Yellow) << '\n';
 			return true;
 		}
 	}
-	m_output << CDriver::Colorer("Unable to turn off the engine", "red") << '\n';
+	m_output << CDriver::Colorer("Unable to turn off the engine", Red) << '\n';
 	return false;
 }
 
@@ -85,12 +85,12 @@ bool CDriver::SetGear(std::istream &strm) const
 
 	if (m_car.SetGear(arg))
 	{ // (+) сделать код более читаемым
-		m_output << "Gear set to" << CDriver::Colorer(to_string(arg), "yellow") << '\n';
+		m_output << "Gear set to " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
 		return true;
 	}
 	else
 	{
-		m_output << CDriver::Colorer("Unable to set gear " + to_string(arg), "red") << '\n';
+		m_output << CDriver::Colorer("Unable to set gear " + to_string(arg), Red) << '\n';
 	}
 	return false;
 }
@@ -103,12 +103,12 @@ bool CDriver::SetSpeed(std::istream& strm) const
 
 	if (m_car.SetSpeed(arg))
 	{
-		m_output << "Now speed is" << CDriver::Colorer(to_string(arg), "yellow") << '\n';
+		m_output << "Now speed is " << CDriver::Colorer(to_string(arg), Yellow) << '\n';
 		return true;
 	}
 	else
 	{
-		m_output << CDriver::Colorer("Unable to set speed to " + to_string(arg), "red") << '\n';
+		m_output << CDriver::Colorer("Unable to set speed to " + to_string(arg), Red) << '\n';
 	}
 	return false;
 }
@@ -118,15 +118,15 @@ bool CDriver::Info(std::istream&) const
 	Direction dir = m_car.GetDirection();
 
 	m_output << (m_car.IsTurnedOn()
-		? "Engine is " + CDriver::Colorer("turned on", "green")
-		: "Engine is " + CDriver::Colorer("turned off", "red")) + "\n"
-	+ "Current gear: " + CDriver::Colorer(to_string(m_car.GetGear()), "yellow") + "\n"
-	+ "Current speed: " + CDriver::Colorer(to_string(m_car.GetSpeed()), "green") + "\n"
+		? "Engine is " + CDriver::Colorer("turned on", Green)
+		: "Engine is " + CDriver::Colorer("turned off", Red)) + "\n"
+	+ "Current gear: " + CDriver::Colorer(to_string(m_car.GetGear()), Yellow) + "\n"
+	+ "Current speed: " + CDriver::Colorer(to_string(m_car.GetSpeed()), Green) + "\n"
 	+ "Direction: " + CDriver::Colorer((dir == Direction::FORWARD
 		? "forward"
 		: (dir == Direction::BACKWARD
 			? "backward"
-			: "stay still")), "cyan")
+			: "stay still")), Cyan)
 	+ "\n";
 
 	return true;

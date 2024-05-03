@@ -2,6 +2,14 @@
 #include <istream>
 #include <ostream>
 
+constexpr int Red = 91;
+constexpr int Green = 92;
+constexpr int Yellow = 93;
+constexpr int Blue = 94;
+constexpr int Magenta = 95;
+constexpr int Cyan = 96;
+constexpr int White = 97;
+
 class CCar;
 // не выводить лишнего сообщения об ошибке
 class CDriver
@@ -9,26 +17,9 @@ class CDriver
 public:
 	CDriver(CCar& car, std::istream& input, std::ostream& output);
 	bool HandleCommand();
-	static std::string Colorer(const std::string& strn, const std::string& color)
+	static std::string Colorer(const std::string& strn, int color)
 	{
-		std::map<std::string, unsigned> colors
-		{
-			{"red", 91},
-			{"green", 92},
-			{"yellow", 93},
-			{"blue", 94},
-			{"magenta", 95},
-			{"cyan", 96},
-			{"white", 97},
-		};
-
-		if (colors.contains(color))
-		{
-			return strn;
-			return "\x1b[" + colors[color] + 'm' + strn + "\x1b[0m";
-		}
-
-		return strn;
+		return "\x1b[" + std::to_string(color) + 'm' + strn + "\x1b[0m";
 	}
 private: // (+)сделать методы константными
 	bool EngineOn(std::istream& args) const;
