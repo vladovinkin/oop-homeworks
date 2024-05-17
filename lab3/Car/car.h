@@ -7,6 +7,12 @@ enum class Direction
 	FORWARD,
 };
 
+struct GearSpeedRange {
+	int gear;
+	int minSpeed;
+	int maxSpeed;
+};
+
 constexpr int GearReverse = -1;
 constexpr int GearNeutral = 0;
 constexpr int GearDrive1 = 1;
@@ -17,15 +23,6 @@ constexpr int GearDrive5 = 5;
 
 constexpr int SpeedMin = 0;
 constexpr int SpeedMax = 150;
-
-const int GearSpeedLimit[6][2]{
-	{0, 0},
-	{0, 30},
-	{20, 50},
-	{30, 60},
-	{40, 90},
-	{50, 150},
-};
 
 class CCar
 {
@@ -40,8 +37,12 @@ class CCar
 		int GetGear() const;
 		int GetSpeed() const;
 		Direction GetDirection() const;
+		bool IsSpeedValidForGear(int speed, int gear) const;
+		bool IsIncreaseSpeedOnNeutralGear(int speed) const;
+		bool IsInvalidSpeedOnDriveGears(int speed) const;
 	private:
 		int m_gear;
 		int m_speed;
 		bool m_engineIsRunning;
+		static const std::vector<GearSpeedRange> s_speedTable;
 };

@@ -451,20 +451,6 @@ SCENARIO("Engaging gears within acceptable speed ranges")
 					CHECK(car.GetGear() == GearReverse);
 				}
 			}
-
-			AND_WHEN("Engage current gear (speed: 10)")
-			{
-				REQUIRE(car.SetSpeed(10));
-				CHECK(car.GetGear() == GearReverse);
-				CHECK(car.GetDirection() == Direction::BACKWARD);
-				REQUIRE(car.SetGear(GearReverse));
-				THEN("Gear will remain the current value")
-				{
-					CHECK(car.GetGear() == GearReverse);
-				}
-			}
-
-			
 		}
 
 		WHEN("Engage first gear")
@@ -473,6 +459,97 @@ SCENARIO("Engaging gears within acceptable speed ranges")
 			THEN("Gear engaged")
 			{
 				CHECK(car.GetGear() == GearDrive1);
+			}
+		}
+	}
+
+	GIVEN("Car moving forward in different speeds")
+	{
+		CCar car;
+		REQUIRE(car.TurnOnEngine());
+		REQUIRE(car.SetGear(1));
+
+		WHEN("Engage current gear (gear:1; speed: 10)")
+		{
+			REQUIRE(car.SetSpeed(10));
+			CHECK(car.GetGear() == GearDrive1);
+			CHECK(car.GetDirection() == Direction::FORWARD);
+			REQUIRE(car.SetGear(GearDrive1));
+
+			THEN("Gear will remain the current value")
+			{
+				CHECK(car.GetGear() == GearDrive1);
+			}
+
+			AND_WHEN("Engage reverse gear(gear:1; speed: 10)")
+			{
+				REQUIRE(!car.SetGear(GearReverse));
+
+				THEN("Gear will remain the current value")
+				{
+					CHECK(car.GetGear() == GearDrive1);
+				}
+			}
+
+			AND_WHEN("Engage neutral gear(gear:1; speed: 10)")
+			{
+				REQUIRE(car.SetGear(GearNeutral));
+
+				THEN("Gear will engage to neutral")
+				{
+					CHECK(car.GetGear() == GearNeutral);
+				}
+			}
+
+			AND_WHEN("Engage 2,3,4,5 gear(speed: 10)")
+			{
+				CHECK(car.GetGear() == GearDrive1);
+
+				REQUIRE(!car.SetGear(GearDrive2));
+				CHECK(car.GetGear() != GearDrive2);
+
+				REQUIRE(!car.SetGear(GearDrive3));
+				CHECK(car.GetGear() != GearDrive3);
+
+				REQUIRE(!car.SetGear(GearDrive4));
+				CHECK(car.GetGear() != GearDrive4);
+
+				REQUIRE(!car.SetGear(GearDrive5));
+				CHECK(car.GetGear() != GearDrive5);
+
+				THEN("Gear will not engage (speed out of range to set 2, 3, 4, 5 gears)")
+				{
+					CHECK(car.GetGear() == GearDrive1);
+				}
+			}
+		}
+
+		WHEN("Engage invalid gears (speed: 29)")
+		{
+			CHECK(car.GetGear() == GearDrive1);
+			REQUIRE(car.SetSpeed(29));
+			REQUIRE(car.SetGear(1));
+
+			THEN("Gear will remain the current value")
+			{
+				REQUIRE(!car.SetGear(GearDrive3));
+				REQUIRE(!car.SetGear(GearDrive4));
+				REQUIRE(!car.SetGear(GearDrive5));
+				REQUIRE(!car.SetGear(GearReverse));
+
+				CHECK(car.GetGear() == GearDrive1);
+
+				AND_WHEN("Engage valid gears (speed: 29)")
+				{
+					THEN("Gear will engage")
+					{
+						REQUIRE(car.SetGear(GearDrive1));
+						CHECK(car.GetGear() == GearDrive1);
+
+						REQUIRE(car.SetGear(GearNeutral));
+						CHECK(car.GetGear() == GearNeutral);
+					}
+				}
 			}
 		}
 	}

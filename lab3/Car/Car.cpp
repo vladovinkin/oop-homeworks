@@ -1,6 +1,16 @@
 ﻿#include "stdafx.h"
 #include "car.h"
 
+const std::vector<GearSpeedRange> CCar::s_speedTable = {
+	{ GearNeutral, 0, 150 },
+	{ GearDrive1, 0, 30 },
+	{ GearDrive2, 20, 50 },
+	{ GearDrive3, 30, 60 },
+	{ GearDrive4, 40, 90 },
+	{ GearDrive5, 50, 150 },
+	{ GearReverse, 0, 20 },
+};
+
 CCar::CCar()
 {
 	m_engineIsRunning = false;
@@ -55,7 +65,7 @@ bool CCar::SetGear(int gear)
 
 		if (gear >= GearDrive1 && gear <= GearDrive5)
 		{
-			if (m_speed < GearSpeedLimit[gear][0] || m_speed > GearSpeedLimit[gear][1])
+			if (!IsSpeedValidForGear(m_speed, gear))
 			{
 				return false;
 			}
@@ -80,13 +90,13 @@ bool CCar::SetSpeed(int speed)
 		return true;
 	}
 	if (speed >= SpeedMin && speed <= SpeedMax && IsTurnedOn())
-	{
-		if (m_gear == GearNeutral && speed > abs(m_speed) || m_gear == GearReverse && (speed < 0 || speed > 20))
+	{// добавить функции для условий
+		if (IsIncreaseSpeedOnNeutralGear(speed))
 		{
 			return false;
 		}
 
-		if (m_gear >= GearDrive1 && m_gear <= GearDrive5 && (speed < GearSpeedLimit[m_gear][0] || speed > GearSpeedLimit[m_gear][1]))
+		if (IsInvalidSpeedOnDriveGears(speed))
 		{
 			return false;
 		}
@@ -122,4 +132,25 @@ Direction CCar::GetDirection() const
 		: (m_speed > 0
 			? Direction::FORWARD
 			: Direction::STAY_STILL);
+}
+
+bool CCar::IsSpeedValidForGear(int speed, int gear) const
+{
+	for (auto& range : s_speedTable) {
+		if (range.gear == gear) {
+			return range.minSpeed <= speed && speed <= range.maxSpeed;
+		}
+	}
+	return false;
+}
+
+bool CCar::IsIncreaseSpeedOnNeutralGear(int speed) const
+{
+	// разбить на 2 функции
+	return m_gear == GearNeutral && speed > abs(m_speed) || m_gear == GearReverse && !IsSpeedValidForGear(speed, GearReverse);
+}
+
+bool CCar::IsInvalidSpeedOnDriveGears(int speed) const
+{
+	return m_gear >= GearDrive1 && m_gear <= GearDrive5 && !IsSpeedValidForGear(speed, m_gear);
 }
