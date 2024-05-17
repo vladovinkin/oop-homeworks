@@ -1,34 +1,39 @@
 #include "stdafx.h"
 #include "Shapes.h"
 
-IShape::IShape(uint32_t outline_color)
+CShape::CShape(uint32_t outline_color)
 	: m_outline_color(outline_color)
 {}
 
-uint32_t IShape::GetOutlineColor() const
+double CShape::GetArea() const
+{
+	return 0;
+}
+
+double CShape::GetPerimeter() const
+{
+	return 0;
+}
+
+std::string CShape::ToString() const
+{
+	return "Shape";
+}
+
+uint32_t CShape::GetOutlineColor() const
 {
 	return m_outline_color;
 }
 
-ISolidShape::ISolidShape(uint32_t outline_color, uint32_t fill_color)
-	: IShape(outline_color)
-	, m_fill_color(fill_color)
-{ }
-
-uint32_t ISolidShape::GetFillColor() const
-{
-	return m_fill_color;
-}
-
 CLineSegment::CLineSegment(const CPoint& point_start, const CPoint& point_end, uint32_t outline_color)
-	: IShape(outline_color)
+	: CShape(outline_color)
 	, m_point_start(point_start)
 	, m_point_end(point_end)
 {}
 
 double CLineSegment::GetArea() const
 {
-	return 0;
+	return CShape::GetArea();
 }
 
 double CLineSegment::GetPerimeter() const
@@ -43,7 +48,7 @@ std::string CLineSegment::ToString() const
 
 uint32_t CLineSegment::GetOutlineColor() const
 {
-	return IShape::GetOutlineColor();
+	return CShape::GetOutlineColor();
 }
 
 CPoint CLineSegment::GetStartPoint() const
@@ -56,8 +61,38 @@ CPoint CLineSegment::GetEndPoint() const
 	return m_point_end;
 }
 
+CSolidShape::CSolidShape(uint32_t outline_color, uint32_t fill_color)
+	: m_outline_color(outline_color)
+	, m_fill_color(fill_color)
+{}
+
+double CSolidShape::GetArea() const
+{
+	return 0;
+}
+
+double CSolidShape::GetPerimeter() const
+{
+	return 0;
+}
+
+std::string CSolidShape::ToString() const
+{
+	return "Solid shape";
+}
+
+uint32_t CSolidShape::GetOutlineColor() const
+{
+	return m_outline_color;
+}
+
+uint32_t CSolidShape::GetFillColor() const
+{
+	return m_fill_color;
+}
+\
 CTriangle::CTriangle(const CPoint& vertex1, const CPoint& vertex2, const CPoint& vertex3, uint32_t outline_color, uint32_t fill_color)
-	: ISolidShape(outline_color, fill_color)
+	: CSolidShape(outline_color, fill_color)
 	, m_vertex1(vertex1)
 	, m_vertex2(vertex2)
 	, m_vertex3(vertex3)
@@ -88,12 +123,12 @@ std::string CTriangle::ToString() const
 
 uint32_t CTriangle::GetOutlineColor() const
 {
-	return IShape::GetOutlineColor();
+	return CSolidShape::GetOutlineColor();
 }
 
 uint32_t CTriangle::GetFillColor() const
 {
-	return ISolidShape::GetFillColor();
+	return CSolidShape::GetFillColor();
 }
 
 CPoint CTriangle::GetVertex1() const
@@ -112,7 +147,7 @@ CPoint CTriangle::GetVertex3() const
 }
 
 CRectangle::CRectangle(const CPoint&, double width, double height, uint32_t outline_color, uint32_t fill_color)
-	: ISolidShape(outline_color, fill_color)
+	: CSolidShape(outline_color, fill_color)
 	, m_width(width)
 	, m_height(height)
 {}
@@ -134,12 +169,12 @@ std::string CRectangle::ToString() const
 
 uint32_t CRectangle::GetOutlineColor() const
 {
-	return IShape::GetOutlineColor();
+	return CSolidShape::GetOutlineColor();
 }
 
 uint32_t CRectangle::GetFillColor() const
 {
-	return ISolidShape::GetFillColor();
+	return CSolidShape::GetFillColor();
 }
 
 CPoint CRectangle::GetLeftTop() const
@@ -168,7 +203,7 @@ double CRectangle::GetHeight() const
 }
 
  CCircle::CCircle(const CPoint& center, double radius, uint32_t outline_color, uint32_t fill_color)
-	: ISolidShape(outline_color, fill_color)
+	: CSolidShape(outline_color, fill_color)
 	, m_center(center)
 	, m_radius(radius)
 {}
@@ -190,12 +225,12 @@ std::string CCircle::ToString() const
 
 uint32_t CCircle::GetOutlineColor() const
 {
-	return IShape::GetOutlineColor();
+	return CSolidShape::GetOutlineColor();
 }
 
 uint32_t CCircle::GetFillColor() const
 {
-	return ISolidShape::GetFillColor();
+	return CSolidShape::GetFillColor();
 }
 
 CPoint CCircle::GetCenter() const
