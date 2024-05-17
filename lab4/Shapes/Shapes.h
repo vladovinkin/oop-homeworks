@@ -11,10 +11,11 @@ class IShape
 {
 public:
 	IShape(uint32_t outline_color);
-	virtual double GetArea() const;
-	virtual double GetPerimeter() const;
-	virtual std::string ToString() const;
+	virtual double GetArea() const = 0;
+	virtual double GetPerimeter() const = 0;
+	virtual std::string ToString() const = 0;
 	virtual uint32_t GetOutlineColor() const;
+	virtual ~IShape() = default;
 private:
 	uint32_t m_outline_color;
 };

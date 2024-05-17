@@ -5,21 +5,10 @@ IShape::IShape(uint32_t outline_color)
 	: m_outline_color(outline_color)
 {}
 
-double IShape::GetArea() const
-{
-	return 0.0;
-}
-
-double IShape::GetPerimeter() const
-{
-	return 0.0;
-}
-
 uint32_t IShape::GetOutlineColor() const
 {
 	return m_outline_color;
 }
-
 
 ISolidShape::ISolidShape(uint32_t outline_color, uint32_t fill_color)
 	: IShape(outline_color)
@@ -31,11 +20,6 @@ uint32_t ISolidShape::GetFillColor() const
 	return m_fill_color;
 }
 
-std::string IShape::ToString() const
-{
-	return "Solid shape";
-}
-
 CLineSegment::CLineSegment(const CPoint& point_start, const CPoint& point_end, uint32_t outline_color)
 	: IShape(outline_color)
 	, m_point_start(point_start)
@@ -44,7 +28,7 @@ CLineSegment::CLineSegment(const CPoint& point_start, const CPoint& point_end, u
 
 double CLineSegment::GetArea() const
 {
-	return IShape::GetArea();
+	return 0;
 }
 
 double CLineSegment::GetPerimeter() const
@@ -183,7 +167,7 @@ double CRectangle::GetHeight() const
 	return m_height;
 }
 
-CCircle::CCircle(const CPoint& center, double radius, uint32_t outline_color, uint32_t fill_color)
+ CCircle::CCircle(const CPoint& center, double radius, uint32_t outline_color, uint32_t fill_color)
 	: ISolidShape(outline_color, fill_color)
 	, m_center(center)
 	, m_radius(radius)
