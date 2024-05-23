@@ -1,30 +1,28 @@
-#pragma once
+п»ї#pragma once
 #include <istream>
 #include <ostream>
 #include <vector>
 #include <functional>
 #include <map>
+#include "Shapes.h"
 
-class IShape;
-class CTriangle;
-class CRectangle;
-class CCircle;
 class CStorage
 {
 public:
 	CStorage(std::istream& input, std::ostream& output);
 	bool HandleCommand();
+	void PrintShapes() const;
 private:
 	bool Line(std::istream& args);
-	bool Triangle(std::istream& args) const;
-	bool Rectangle(std::istream& args) const;
-	bool Circle(std::istream& args) const;
+	bool Triangle(std::istream& args);
+	bool Rectangle(std::istream& args);
+	bool Circle(std::istream& args);
 private:
-	// функция-обработчик команды пользователя.
-	// Возвращает true, если команда распознана и false, если были ошибки
+	// С„СѓРЅРєС†РёСЏ-РѕР±СЂР°Р±РѕС‚С‡РёРє РєРѕРјР°РЅРґС‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ.
+	// Р’РѕР·РІСЂР°С‰Р°РµС‚ true, РµСЃР»Рё РєРѕРјР°РЅРґР° СЂР°СЃРїРѕР·РЅР°РЅР° Рё false, РµСЃР»Рё Р±С‹Р»Рё РѕС€РёР±РєРё
 	using Handler = std::function<bool(std::istream& args)>;
 
-	// Отображает название команды на её обработчик
+	// РћС‚РѕР±СЂР°Р¶Р°РµС‚ РЅР°Р·РІР°РЅРёРµ РєРѕРјР°РЅРґС‹ РЅР° РµС‘ РѕР±СЂР°Р±РѕС‚С‡РёРє
 	using ActionMap = std::map<std::string, Handler>;
 
 	std::vector<std::unique_ptr<IShape>> m_shapes;
