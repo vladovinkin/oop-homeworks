@@ -10,16 +10,16 @@ CStorage::CStorage(std::istream& input, std::ostream& output)
 	, m_output(output)
 	, m_actionMap({
 		{"line", [this](istream& strm) {
-			   return Line(strm);
+			return Line(strm);
 		} },
 		{"triangle", [this](istream& strm) {
-			   return Line(strm);
+			return Triangle(strm);
 		} },
 		{"rectangle", [this](istream& strm) {
-			   return Line(strm);
+			return Rectangle(strm);
 		} },
 		{"circle", [this](istream& strm) {
-			   return Line(strm);
+			return Circle(strm);
 		} },
 		})
 {
@@ -44,12 +44,30 @@ bool CStorage::HandleCommand()
 }
 
 // line x1 y1 x2 y2 border_color
-bool CStorage::Line(std::istream&) const
+bool CStorage::Line(std::istream& strm)
 {
 	// разобрать аргументы
-	// создать объект
-	// добавить объект в вектор
-	return 0;
+	double x1, y1, x2, y2;
+	uint32_t border_color;
+
+	if (strm >> x1 >> y1 >> x2 >> y2 >> border_color)
+	{
+		// создать объект
+		CLineSegment line({ x1, y1 }, { x2, y2 }, border_color);
+
+		// добавить объект в вектор
+		//m_shapes.push_back(std::make_unique<CLineSegment>(line));
+		//m_shapes.push_back(new CLineSegment({ x1, y1 }, { x2, y2 }, border_color));
+		 
+		m_shapes.push_back(std::make_unique<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color));
+
+		//auto line = std::make_unique<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color);
+		//m_shapes.push_back(std::move(line));
+
+		return true;
+	}
+
+	return false;
 }
 
 // triangle x1 y1 x2 y2 x3 y3 border_color fill_color

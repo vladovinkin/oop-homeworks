@@ -15,7 +15,7 @@ public:
 	CStorage(std::istream& input, std::ostream& output);
 	bool HandleCommand();
 private:
-	bool Line(std::istream& args) const;
+	bool Line(std::istream& args);
 	bool Triangle(std::istream& args) const;
 	bool Rectangle(std::istream& args) const;
 	bool Circle(std::istream& args) const;

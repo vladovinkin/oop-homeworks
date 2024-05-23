@@ -2,10 +2,25 @@
 //
 
 #include "stdafx.h"
-#include "Shapes.h"
+#include "storage.h"
 
 int main()
 {
+    setlocale(LC_ALL, "rus");
+
+    CStorage storage(std::cin, std::cout);
+
+    while (!std::cin.eof() && !std::cin.fail())
+    {
+        std::cout << "> ";
+        if (!storage.HandleCommand())
+        {
+            std::cout << "Unknown or inapplicable command!\n";
+        }
+        std::cout << '\n';
+    }
+
+    /*
     std::vector<std::unique_ptr<IShape>> shapes;
 
     CCircle circle = CCircle({ 2.3, 4.5 }, 6.7, 0x000000, 0xFFFFFF);
@@ -23,6 +38,7 @@ int main()
         std::cout << "area: " << shape->GetArea() << '\n';
         std::cout << "perimeter: " << shape->GetPerimeter() << '\n';
     }
+    */
 
     return 0;
 }
