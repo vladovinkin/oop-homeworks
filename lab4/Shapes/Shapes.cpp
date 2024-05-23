@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Shapes.h"
 
 CShape::CShape(uint32_t outline_color)

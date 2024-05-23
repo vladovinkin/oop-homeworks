@@ -1,4 +1,4 @@
-#include "stdafx.h"
+п»ї#include "stdafx.h"
 #include "Storage.h"
 #include "Shapes.h"
 
@@ -46,44 +46,63 @@ bool CStorage::HandleCommand()
 // line x1 y1 x2 y2 border_color
 bool CStorage::Line(std::istream& strm)
 {
-	// разобрать аргументы
 	double x1, y1, x2, y2;
 	uint32_t border_color;
 
 	if (strm >> x1 >> y1 >> x2 >> y2 >> border_color)
 	{
-		// создать объект
-		CLineSegment line({ x1, y1 }, { x2, y2 }, border_color);
-
-		// добавить объект в вектор
-		//m_shapes.push_back(std::make_unique<CLineSegment>(line));
-		//m_shapes.push_back(new CLineSegment({ x1, y1 }, { x2, y2 }, border_color));
-		 
 		m_shapes.push_back(std::make_unique<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color));
-
-		//auto line = std::make_unique<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color);
-		//m_shapes.push_back(std::move(line));
-
 		return true;
 	}
-
 	return false;
 }
 
 // triangle x1 y1 x2 y2 x3 y3 border_color fill_color
-bool CStorage::Triangle(std::istream&) const
+bool CStorage::Triangle(std::istream& strm)
 {
-	return 0;
+	double x1, y1, x2, y2, x3, y3;
+	uint32_t border_color, fill_color;
+
+	if (strm >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> border_color >> fill_color)
+	{
+		m_shapes.push_back(std::make_unique<CTriangle>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, CPoint{ x3, y3 }, border_color, fill_color));
+		return true;
+	}
+	return false;
 }
 
 // rectangle x1 y1 width height border_color fill_color
-bool CStorage::Rectangle(std::istream&) const
+bool CStorage::Rectangle(std::istream& strm)
 {
-	return 0;
+	double x, y, width, height;
+	uint32_t border_color, fill_color;
+
+	if (strm >> x >> y >> width >> height >> border_color >> fill_color)
+	{
+		m_shapes.push_back(std::make_unique<CRectangle>(CPoint{ x, y }, width, height, border_color, fill_color));
+		return true;
+	}
+	return false;
 }
 
 // circle x y radius border_color fill_color
-bool CStorage::Circle(std::istream&) const
+bool CStorage::Circle(std::istream& strm)
 {
-	return 0;
+	double x, y, radius;
+	uint32_t border_color, fill_color;
+
+	if (strm >> x >> y >> radius >> border_color >> fill_color)
+	{
+		m_shapes.push_back(std::make_unique<CCircle>(CPoint{ x, y }, radius, border_color, fill_color));
+		return true;
+	}
+	return false;
+}
+
+void CStorage::PrintShapes() const
+{
+	for (const auto& shape : m_shapes)
+	{
+		m_output << shape->ToString() << '\n';
+	}
 }

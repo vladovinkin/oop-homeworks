@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 
 #include <string>
 
@@ -15,7 +15,7 @@ public:
 	virtual std::string ToString() const = 0;
 	virtual uint32_t GetOutlineColor() const = 0;
 	virtual ~IShape() = default;
-	// (+) в интерфейсах не должно быть данных и реализации методов
+	// (+) РІ РёРЅС‚РµСЂС„РµР№СЃР°С… РЅРµ РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ РґР°РЅРЅС‹С… Рё СЂРµР°Р»РёР·Р°С†РёРё РјРµС‚РѕРґРѕРІ
 };
 
 class CShape : public IShape
