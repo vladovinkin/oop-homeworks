@@ -100,9 +100,9 @@ bool CController::Circle(std::istream& strm)
 
 void CController::PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const
 {
-	m_output << "Area: " << shape->GetArea() << '\n';
-	m_output << "Perimeter: " << shape->GetPerimeter() << '\n';
-	m_output << "Outline color: " << shape->GetOutlineColor() << '\n';
+	m_output << "Area: " << std::fixed << std::setprecision(2) << shape->GetArea() << '\n';
+	m_output << "Perimeter: " << std::fixed << std::setprecision(2) << shape->GetPerimeter() << '\n';
+	m_output << "Outline color: #" << std::hex << shape->GetOutlineColor() << '\n';
 	m_output << shape->ToString() << '\n';
 	m_output << '\n';
 }
@@ -114,10 +114,10 @@ void CController::PrintResult() const
 		std::shared_ptr<IShape> shapeWithMaxArea = GetShapeWithMaxArea();
 		std::shared_ptr<IShape> shapeWithMinPerimeter = GetShapeWithMinPerimeter();
 
-		m_output << "Shape with maximum area:\n";
+		m_output << "## Shape with maximum area:\n";
 		PutShapeInfoToOutput(shapeWithMaxArea);
 
-		m_output << "Shape with minimum perimeter:\n";
+		m_output << "## Shape with minimum perimeter:\n";
 		PutShapeInfoToOutput(shapeWithMinPerimeter);
 	}
 	else

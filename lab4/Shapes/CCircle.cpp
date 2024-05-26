@@ -18,7 +18,16 @@ double CCircle::GetPerimeter() const
 
 std::string CCircle::ToString() const
 {
-	return "Circle shape";
+	std::stringstream stream;
+	CPoint center = GetCenter();
+
+	stream << "Shape type: circle\n" 
+		<< "Center point: x = " << std::fixed << std::setprecision(2) << center.x 
+		<< "; y = " << std::fixed << std::setprecision(2) << center.y << '\n'
+		<< "Radius: " << std::fixed << std::setprecision(2) << GetRadius() << '\n'
+		<< "Fill color: #" << std::hex << GetFillColor();
+
+	return stream.str();
 }
 
 uint32_t CCircle::GetOutlineColor() const
