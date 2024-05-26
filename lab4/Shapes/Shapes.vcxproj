@@ -133,14 +133,14 @@
   <ItemGroup>
     <ClCompile Include="Shapes.cpp" />
     <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Storage.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shapes.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Storage.h" />
+    <ClInclude Include="Controller.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Shapes.rc" />

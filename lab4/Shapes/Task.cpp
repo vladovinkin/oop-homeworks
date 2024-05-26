@@ -2,25 +2,25 @@
 //
 
 #include "stdafx.h"
-#include "storage.h"
+#include "Controller.h"
 
 int main()
 {
     setlocale(LC_ALL, "rus");
 
-    CStorage storage(std::cin, std::cout);
+    CController controller(std::cin, std::cout);
 
     while (!std::cin.eof() && !std::cin.fail())
     {
         std::cout << "> ";
-        if (!storage.HandleCommand())
+        if (!controller.HandleCommand())
         {
             std::cout << "Unknown or inapplicable command!\n";
         }
         std::cout << '\n';
     }
 
-    storage.PrintShapes();
+    controller.PrintResult();
 
     return 0;
-}
+} // (+) storage -> controller

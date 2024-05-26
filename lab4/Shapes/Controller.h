@@ -6,12 +6,12 @@
 #include <map>
 #include "Shapes.h"
 
-class CStorage
+class CController
 {
 public:
-	CStorage(std::istream& input, std::ostream& output);
+	CController(std::istream& input, std::ostream& output);
 	bool HandleCommand();
-	void PrintShapes() const;
+	void PrintResult() const;
 private:
 	bool Line(std::istream& args);
 	bool Triangle(std::istream& args);
@@ -25,7 +25,12 @@ private:
 	// Отображает название команды на её обработчик
 	using ActionMap = std::map<std::string, Handler>;
 
-	std::vector<std::unique_ptr<IShape>> m_shapes;
+	std::shared_ptr<IShape> GetShapeWithMaxArea() const;
+	std::shared_ptr<IShape> GetShapeWithMinPerimeter() const;
+
+	void PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const;
+
+	std::vector<std::shared_ptr<IShape>> m_shapes;
 	std::istream& m_input;
 	std::ostream& m_output;
 

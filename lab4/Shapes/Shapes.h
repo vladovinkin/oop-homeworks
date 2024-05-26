@@ -6,7 +6,7 @@ struct CPoint
 {
 	double x, y;
 };
-
+// один класс, один файл
 class IShape
 {
 public:
