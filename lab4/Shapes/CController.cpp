@@ -1,6 +1,5 @@
 ﻿#include "stdafx.h"
-#include "Controller.h"
-#include "Shapes.h"
+#include "CController.h"
 
 using namespace std;
 using namespace std::placeholders;

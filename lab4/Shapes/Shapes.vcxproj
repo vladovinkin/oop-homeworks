@@ -131,16 +131,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Shapes.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="CCircle.cpp" />
+    <ClCompile Include="CLineSegment.cpp" />
+    <ClCompile Include="CShape.cpp" />
+    <ClCompile Include="CSolidShape.cpp" />
+    <ClCompile Include="CTriangle.cpp" />
+    <ClCompile Include="CRectangle.cpp" />
+    <ClCompile Include="CController.cpp" />
     <ClCompile Include="Task.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Shapes.h" />
+    <ClInclude Include="CLineSegment.h" />
+    <ClInclude Include="CRectangle.h" />
+    <ClInclude Include="CShape.h" />
+    <ClInclude Include="CSolidShape.h" />
+    <ClInclude Include="CTriangle.h" />
+    <ClInclude Include="IShape.h" />
+    <ClInclude Include="ISolidShape.h" />
+    <ClInclude Include="CCircle.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="Controller.h" />
+    <ClInclude Include="CController.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Shapes.rc" />

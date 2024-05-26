@@ -1,8 +1,7 @@
 ﻿// Shapes.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
-#include "stdafx.h"
-#include "Controller.h"
+#include "CController.h"
 
 int main()
 {
@@ -23,4 +22,4 @@ int main()
     controller.PrintResult();
 
     return 0;
-} // (+) storage -> controller
+}

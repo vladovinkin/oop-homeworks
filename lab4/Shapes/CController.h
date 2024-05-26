@@ -4,7 +4,10 @@
 #include <vector>
 #include <functional>
 #include <map>
-#include "Shapes.h"
+#include "CLineSegment.h"
+#include "CTriangle.h"
+#include "CRectangle.h"
+#include "CCircle.h"
 
 class CController
 {
