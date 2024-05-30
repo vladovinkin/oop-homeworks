@@ -18,7 +18,17 @@ double CRectangle::GetPerimeter() const
 
 std::string CRectangle::ToString() const
 {
-	return "Rectangle shape";
+	std::stringstream stream;
+	CPoint leftTop = GetLeftTop();
+
+	stream << "Shape type: rectangle\n"
+		<< "LeftTop: x = " << std::fixed << std::setprecision(2) << leftTop.x
+		<< "; y = " << std::fixed << std::setprecision(2) << leftTop.y << '\n'
+		<< "Width = " << std::fixed << std::setprecision(2) << GetWidth() << '\n'
+		<< "Height = " << std::fixed << std::setprecision(2) << GetHeight() << '\n'
+		<< "Fill color: #" << std::hex << GetFillColor();
+
+	return stream.str();
 }
 
 uint32_t CRectangle::GetOutlineColor() const

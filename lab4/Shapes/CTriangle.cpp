@@ -27,7 +27,21 @@ double CTriangle::GetPerimeter() const
 
 std::string CTriangle::ToString() const
 {
-	return "Triangle shape";
+	std::stringstream stream;
+	CPoint vertex1 = GetVertex1();
+	CPoint vertex2 = GetVertex2();
+	CPoint vertex3 = GetVertex3();
+
+	stream << "Shape type: triangle\n"
+		<< "Vertex1: x = " << std::fixed << std::setprecision(2) << vertex1.x
+		<< "; y = " << std::fixed << std::setprecision(2) << vertex1.y << '\n'
+		<< "Vertex2: x = " << std::fixed << std::setprecision(2) << vertex2.x
+		<< "; y = " << std::fixed << std::setprecision(2) << vertex2.y << '\n'
+		<< "Vertex3: x = " << std::fixed << std::setprecision(2) << vertex3.x
+		<< "; y = " << std::fixed << std::setprecision(2) << vertex3.y << '\n'
+		<< "Fill color: #" << std::hex << GetFillColor();
+
+	return stream.str();
 }
 
 uint32_t CTriangle::GetOutlineColor() const

@@ -18,7 +18,17 @@ double CLineSegment::GetPerimeter() const
 
 std::string CLineSegment::ToString() const
 {
-	return "Line segment";
+	std::stringstream stream;
+	CPoint pointStart = GetStartPoint();
+	CPoint pointEnd = GetEndPoint();
+
+	stream << "Shape type: line segment\n"
+		<< "Start point: x = " << std::fixed << std::setprecision(2) << pointStart.x
+		<< "; y = " << std::fixed << std::setprecision(2) << pointStart.y << '\n'
+		<< "End point: x = " << std::fixed << std::setprecision(2) << pointEnd.x
+		<< "; y = " << std::fixed << std::setprecision(2) << pointEnd.y << '\n';
+
+	return stream.str();
 }
 
 uint32_t CLineSegment::GetOutlineColor() const
