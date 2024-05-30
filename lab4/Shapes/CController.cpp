@@ -20,11 +20,14 @@ CController::CController(std::istream& input, std::ostream& output)
 		{"circle", [this](istream& strm) {
 			return Circle(strm);
 		} },
+		{"exit", [this](istream& strm) {
+			return Exit(strm);
+		} },
 		})
 {
 }
 
-bool CController::HandleCommand()
+int CController::HandleCommand()
 {
 	string commandLine;
 	getline(m_input, commandLine);
@@ -33,17 +36,21 @@ bool CController::HandleCommand()
 	string action;
 	strm >> action;
 
-	auto it = m_actionMap.find(action);
-	if (it != m_actionMap.end())
+	if (action.length())
 	{
-		return it->second(strm);
+		auto it = m_actionMap.find(action);
+		if (it != m_actionMap.end())
+		{
+			return it->second(strm);
+		}
+		return ResponseUnknownCommand;
 	}
 
-	return false;
+	return ResponseEnd;
 }
 
 // line x1 y1 x2 y2 border_color
-bool CController::Line(std::istream& strm)
+int CController::Line(std::istream& strm)
 {
 	double x1, y1, x2, y2;
 	uint32_t border_color;
@@ -51,13 +58,13 @@ bool CController::Line(std::istream& strm)
 	if (strm >> x1 >> y1 >> x2 >> y2 >> std::hex >> border_color)
 	{
 		m_shapes.push_back(std::make_shared<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color));
-		return true;
+		return ResponseOk;
 	}
-	return false;
+	return ResponseInvalidArguments;
 }
 
 // triangle x1 y1 x2 y2 x3 y3 border_color fill_color
-bool CController::Triangle(std::istream& strm)
+int CController::Triangle(std::istream& strm)
 {
 	double x1, y1, x2, y2, x3, y3;
 	uint32_t border_color, fill_color;
@@ -65,13 +72,13 @@ bool CController::Triangle(std::istream& strm)
 	if (strm >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> std::hex >> border_color >> std::hex >> fill_color)
 	{
 		m_shapes.push_back(std::make_shared<CTriangle>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, CPoint{ x3, y3 }, border_color, fill_color));
-		return true;
+		return ResponseOk;
 	}
-	return false;
+	return ResponseInvalidArguments;
 }
 
 // rectangle x1 y1 width height border_color fill_color
-bool CController::Rectangle(std::istream& strm)
+int CController::Rectangle(std::istream& strm)
 {
 	double x, y, width, height;
 	uint32_t border_color, fill_color;
@@ -79,13 +86,13 @@ bool CController::Rectangle(std::istream& strm)
 	if (strm >> x >> y >> width >> height >> std::hex >> border_color >> std::hex >> fill_color)
 	{
 		m_shapes.push_back(std::make_shared<CRectangle>(CPoint{ x, y }, width, height, border_color, fill_color));
-		return true;
+		return ResponseOk;
 	}
-	return false;
+	return ResponseInvalidArguments;
 }
 
 // circle x y radius border_color fill_color
-bool CController::Circle(std::istream& strm)
+int CController::Circle(std::istream& strm)
 {
 	double x, y, radius;
 	uint32_t border_color, fill_color;
@@ -93,9 +100,15 @@ bool CController::Circle(std::istream& strm)
 	if (strm >> x >> y >> radius >> std::hex >> border_color >> std::hex >> fill_color)
 	{
 		m_shapes.push_back(std::make_shared<CCircle>(CPoint{ x, y }, radius, border_color, fill_color));
-		return true;
+		return ResponseOk;
 	}
-	return false;
+	return ResponseInvalidArguments;
+}
+
+int CController::Exit(std::istream& strm)
+{
+	m_output << '\n';
+	return ResponseEnd;
 }
 
 void CController::PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const

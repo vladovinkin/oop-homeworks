@@ -9,21 +9,27 @@
 #include "CRectangle.h"
 #include "CCircle.h"
 
+constexpr int ResponseOk = 0;
+constexpr int ResponseEnd = 1;
+constexpr int ResponseUnknownCommand = 2;
+constexpr int ResponseInvalidArguments = 3;
+
 class CController
 {
 public:
 	CController(std::istream& input, std::ostream& output);
-	bool HandleCommand();
+	int HandleCommand();
 	void PrintResult() const;
 private:
-	bool Line(std::istream& args);
-	bool Triangle(std::istream& args);
-	bool Rectangle(std::istream& args);
-	bool Circle(std::istream& args);
+	int Line(std::istream& args);
+	int Triangle(std::istream& args);
+	int Rectangle(std::istream& args);
+	int Circle(std::istream& args);
+	int Exit(std::istream& args);
 private:
 	// функция-обработчик команды пользователя.
 	// Возвращает true, если команда распознана и false, если были ошибки
-	using Handler = std::function<bool(std::istream& args)>;
+	using Handler = std::function<int(std::istream& args)>;
 
 	// Отображает название команды на её обработчик
 	using ActionMap = std::map<std::string, Handler>;

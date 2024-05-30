@@ -12,9 +12,22 @@ int main()
     while (!std::cin.eof() && !std::cin.fail())
     {
         std::cout << "> ";
-        if (!controller.HandleCommand())
+        int handlerResponse = controller.HandleCommand();
+        if (handlerResponse != ResponseEnd)
         {
-            std::cout << "Unknown or inapplicable command!\n";
+            switch (handlerResponse)
+            {
+            case ResponseUnknownCommand:
+                std::cout << "Unknown command\n";
+                break;
+            case ResponseInvalidArguments:
+                std::cout << "Invalid arguments\n";
+                break;
+            }
+        }
+        else
+        {
+            break;
         }
         std::cout << '\n';
     }
