@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include <map>
+#include "CStorage.h"
 #include "CLineSegment.h"
 #include "CTriangle.h"
 #include "CRectangle.h"
@@ -34,14 +35,10 @@ private:
 	// Отображает название команды на её обработчик
 	using ActionMap = std::map<std::string, Handler>;
 
-	std::shared_ptr<IShape> GetShapeWithMaxArea() const;
-	std::shared_ptr<IShape> GetShapeWithMinPerimeter() const;
-
 	void PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const;
 
-	std::vector<std::shared_ptr<IShape>> m_shapes;
 	std::istream& m_input;
 	std::ostream& m_output;
-
+	CStorage store;
 	const ActionMap m_actionMap;
 };

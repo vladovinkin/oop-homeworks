@@ -57,7 +57,8 @@ int CController::Line(std::istream& strm)
 
 	if (strm >> x1 >> y1 >> x2 >> y2 >> std::hex >> border_color)
 	{
-		m_shapes.push_back(std::make_shared<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color));
+		std::shared_ptr<IShape> line = std::make_shared<CLineSegment>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, border_color);
+		store.AddShape(line);
 		return ResponseOk;
 	}
 	return ResponseInvalidArguments;
@@ -71,7 +72,8 @@ int CController::Triangle(std::istream& strm)
 
 	if (strm >> x1 >> y1 >> x2 >> y2 >> x3 >> y3 >> std::hex >> border_color >> std::hex >> fill_color)
 	{
-		m_shapes.push_back(std::make_shared<CTriangle>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, CPoint{ x3, y3 }, border_color, fill_color));
+		std::shared_ptr<IShape> triangle = std::make_shared<CTriangle>(CPoint{ x1, y1 }, CPoint{ x2, y2 }, CPoint{ x3, y3 }, border_color, fill_color);
+		store.AddShape(triangle);
 		return ResponseOk;
 	}
 	return ResponseInvalidArguments;
@@ -85,7 +87,8 @@ int CController::Rectangle(std::istream& strm)
 
 	if (strm >> x >> y >> width >> height >> std::hex >> border_color >> std::hex >> fill_color)
 	{
-		m_shapes.push_back(std::make_shared<CRectangle>(CPoint{ x, y }, width, height, border_color, fill_color));
+		std::shared_ptr<IShape> rect = std::make_shared<CRectangle>(CPoint{ x, y }, width, height, border_color, fill_color);
+		store.AddShape(rect);
 		return ResponseOk;
 	}
 	return ResponseInvalidArguments;
@@ -99,7 +102,8 @@ int CController::Circle(std::istream& strm)
 
 	if (strm >> x >> y >> radius >> std::hex >> border_color >> std::hex >> fill_color)
 	{
-		m_shapes.push_back(std::make_shared<CCircle>(CPoint{ x, y }, radius, border_color, fill_color));
+		std::shared_ptr<IShape> circle = std::make_shared<CCircle>(CPoint{ x, y }, radius, border_color, fill_color);
+		store.AddShape(circle);
 		return ResponseOk;
 	}
 	return ResponseInvalidArguments;
@@ -122,10 +126,10 @@ void CController::PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const
 
 void CController::PrintResult() const
 {
-	if (m_shapes.size())
+	if (store.GetSize())
 	{
-		std::shared_ptr<IShape> shapeWithMaxArea = GetShapeWithMaxArea();
-		std::shared_ptr<IShape> shapeWithMinPerimeter = GetShapeWithMinPerimeter();
+		std::shared_ptr<IShape> shapeWithMaxArea = store.GetShapeWithMaxArea();
+		std::shared_ptr<IShape> shapeWithMinPerimeter = store.GetShapeWithMinPerimeter();
 
 		m_output << "## Shape with maximum area:\n";
 		PutShapeInfoToOutput(shapeWithMaxArea);
@@ -137,40 +141,4 @@ void CController::PrintResult() const
 	{
 		m_output << "Не было введено ни одного объекта\n";
 	}
-}
-
-std::shared_ptr<IShape> CController::GetShapeWithMaxArea() const
-{
-	std::shared_ptr<IShape> resultShape;
-	double maxArea = -1.0;
-
-	for (const auto& shape : m_shapes)
-	{
-		double shapeArea = shape->GetArea();
-		if (maxArea < 0.0 || shapeArea > maxArea)
-		{
-			resultShape = shape;
-			maxArea = shapeArea;
-		}
-	}
-
-	return resultShape;
-}
-
-std::shared_ptr<IShape> CController::GetShapeWithMinPerimeter() const
-{
-	std::shared_ptr<IShape> resultShape;
-	double minPerimeter = -1.0;
-
-	for (const auto& shape : m_shapes)
-	{
-		double shapePerimeter = shape->GetPerimeter();
-		if (minPerimeter < 0.0 || shapePerimeter < minPerimeter)
-		{
-			resultShape = shape;
-			minPerimeter = shapePerimeter;
-		}
-	}
-
-	return resultShape;
 }

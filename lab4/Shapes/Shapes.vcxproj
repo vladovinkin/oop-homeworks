@@ -135,6 +135,7 @@
     <ClCompile Include="CLineSegment.cpp" />
     <ClCompile Include="CShape.cpp" />
     <ClCompile Include="CSolidShape.cpp" />
+    <ClCompile Include="CStorage.cpp" />
     <ClCompile Include="CTriangle.cpp" />
     <ClCompile Include="CRectangle.cpp" />
     <ClCompile Include="CController.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="CRectangle.h" />
     <ClInclude Include="CShape.h" />
     <ClInclude Include="CSolidShape.h" />
+    <ClInclude Include="CStorage.h" />
     <ClInclude Include="CTriangle.h" />
     <ClInclude Include="IShape.h" />
     <ClInclude Include="ISolidShape.h" />
