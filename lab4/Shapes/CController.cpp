@@ -117,6 +117,7 @@ int CController::Exit(std::istream& strm)
 
 void CController::PutShapeInfoToOutput(std::shared_ptr<IShape> shape) const
 {
+	// посмотреть как сделан пример с объёмными телами (в папке labs)
 	m_output << "Area: " << std::fixed << std::setprecision(2) << shape->GetArea() << '\n';
 	m_output << "Perimeter: " << std::fixed << std::setprecision(2) << shape->GetPerimeter() << '\n';
 	m_output << "Outline color: #" << std::hex << shape->GetOutlineColor() << '\n';

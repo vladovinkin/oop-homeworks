@@ -13,6 +13,7 @@ double CLineSegment::GetArea() const
 
 double CLineSegment::GetPerimeter() const
 {
+	// выделить один и тот же код в отдельную функцию
 	return std::sqrt(std::pow(m_point_end.x - m_point_start.x, 2.0) + std::pow(m_point_end.y - m_point_start.y, 2.0));
 }
 

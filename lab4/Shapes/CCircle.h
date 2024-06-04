@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "CSolidShape.h"
-
+// разобраться в публичном наследовании
 class CCircle : public CSolidShape
 {
 public:
