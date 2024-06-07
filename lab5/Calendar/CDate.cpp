@@ -1,4 +1,5 @@
 ﻿#include "CDate.h"
+#include <string>
 
 CDate::CDate(unsigned day, Month month, unsigned year)
 {
@@ -159,6 +160,11 @@ CDate CDate::operator +(unsigned days)const
 	return CDate(m_days + days);
 }
 
+CDate operator +(unsigned days, CDate const& date)
+{
+    return date + days;
+}
+
 CDate CDate::operator -(unsigned days)const
 {
 	return CDate(m_days - days);
@@ -174,4 +180,17 @@ CDate CDate::operator -=(unsigned days)
 {
 	m_days -= days;
 	return *this;
+}
+
+std::ostream& operator <<(std::ostream& stream, CDate const& date)
+{
+	stream << TwoDigitFormatUnsigned(date.GetDay()) << "."
+		<< TwoDigitFormatUnsigned((unsigned)date.GetMonth()) << "."
+		<< TwoDigitFormatUnsigned(date.GetYear());
+	return stream;
+}
+
+std::string TwoDigitFormatUnsigned(unsigned number)
+{
+	return (number < 10 ? "0" : "") + std::to_string(number);
 }

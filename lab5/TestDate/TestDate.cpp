@@ -102,6 +102,17 @@ SCENARIO("Проверка перегрузки операторов")
 			}
 		}
 
+		WHEN("Прибавляем к определённому количеству дней дату")
+		{
+			CDate newDate = 59 + date;
+			THEN("Дата сменится на указанное количество дней")
+			{
+				CHECK(newDate.GetDay() == 29);
+				CHECK(newDate.GetMonth() == Month::FEBRUARY);
+				CHECK(newDate.GetYear() == 2024);
+			}
+		}
+
 		WHEN("Вычитаем из даты определённое количество дней")
 		{
 			CDate newDate = date - 3;
@@ -183,6 +194,16 @@ SCENARIO("Проверка перегрузки операторов")
 				CHECK(date.GetDay() == 31);
 				CHECK(date.GetMonth() == Month::DECEMBER);
 				CHECK(date.GetYear() == 2022);
+			}
+		}
+
+		WHEN("Выводим дату в поток вывода <<")
+		{
+			std::ostringstream output;
+			output << date;
+			THEN("Дата окажется в потоке вывода")
+			{
+				CHECK(output.str() == "01.01.2024");
 			}
 		}
 	}

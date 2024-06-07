@@ -1,5 +1,7 @@
 ﻿#pragma once
 #include <compare>
+#include <istream>
+#include <ostream>
 
 // Месяц
 enum class Month
@@ -112,9 +114,8 @@ private:
     unsigned m_days;
 };
 
-//CDate operator +(unsigned days, CDate const& date)
-//{
-//    return date + days;
-//}
+// оператор + (days + date)
+CDate operator +(unsigned days, CDate const& date);
 
-
+std::ostream& operator <<(std::ostream& stream, CDate const& date);
+std::string TwoDigitFormatUnsigned(unsigned number);
