@@ -36,6 +36,12 @@ SCENARIO("Проверка конструкторов")
 		CHECK(date.GetMonth() == Month::JUNE);
 		CHECK(date.GetYear() == 2024);
 	}
+
+	GIVEN("Конструктор с тремя параметрами (день, месяц, год) создаёт определённую параметрами дату")
+	{
+		CDate date(7, Month::JUNE, 2250);
+		CHECK(date.GetWeekDay() == WeekDay::FRIDAY);
+	}
 }
 
 SCENARIO("Проверка перегрузки операторов")
