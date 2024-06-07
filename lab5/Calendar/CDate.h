@@ -15,6 +15,9 @@ enum class WeekDay
     THURSDAY, FRIDAY, SATURDAY
 };
 
+constexpr unsigned NonLeapYearDays = 365;
+constexpr unsigned BaseYear = 1970;
+
 constexpr unsigned DaysBeforeJanuary = 0;
 constexpr unsigned DaysBeforeFebruary = DaysBeforeJanuary + 31;
 constexpr unsigned DaysBeforeMarch = DaysBeforeFebruary + 28;
@@ -70,10 +73,11 @@ public:
     // возвращает день недели
     WeekDay GetWeekDay()const;
 
-    CDate operator +(unsigned days) const;
-
     // возвращает количество дней, прошедших с 1 января 1970 года
     unsigned GetDays()const;
+
+    // перегрузка опреатора + (date + days)
+    CDate operator +(unsigned days) const;
 private:
     bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;

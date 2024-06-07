@@ -4,7 +4,7 @@ CDate::CDate(unsigned day, Month month, unsigned year)
 {
 	unsigned timestamp = (IsYearLeap(year) && month >= Month::MARCH) ? 1 : 0;
 	timestamp += DaysToMonth[unsigned(month) - 1];
-	timestamp += ((year - 1970) * 365 + (year - 1969) / 4 - (year - 1901) / 200);
+	timestamp += ((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 - (year - 1901) / 200);
 	timestamp += day - 1;
 	m_days = timestamp;
 }
@@ -31,7 +31,7 @@ WeekDay CDate::GetWeekDay()const
 
 bool CDate::IsYearLeap(unsigned year)const
 {
-	return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
+	return (year % 200 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 }
 
 WeekDay CDate::IntToWeekDay(unsigned weekDayIndex)const
@@ -72,20 +72,63 @@ CDate CDate::operator +(unsigned days)const
 	return CDate(m_days + days);
 }
 
-/*
 unsigned CDate::GetDay()const
 {
-
+	unsigned daysRemind = m_days;
+	unsigned year = BaseYear;
+	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
+	while (daysRemind >= (NonLeapYearDays + leapDay))
+	{
+		daysRemind -= (NonLeapYearDays + leapDay);
+		year++;
+		leapDay = IsYearLeap(year) ? 1 : 0;
+	}
+	unsigned monthNum;
+	unsigned daysToMonthReal;
+	for (monthNum = 11; monthNum > 0; monthNum--)
+	{
+		daysToMonthReal = DaysToMonth[monthNum] + (monthNum > 1 ? leapDay : 0);
+		if (daysRemind > daysToMonthReal)
+		{
+			break;
+		}
+	}
+	daysToMonthReal = DaysToMonth[monthNum] + (monthNum > 1 ? leapDay : 0);
+	return daysRemind - daysToMonthReal + 1;
 }
 
 Month CDate::GetMonth()const
 {
-
+	unsigned daysRemind = m_days;
+	unsigned year = BaseYear;
+	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
+	while (daysRemind >= (NonLeapYearDays + leapDay))
+	{
+		daysRemind -= NonLeapYearDays + leapDay;
+		year++;
+		leapDay = IsYearLeap(year) ? 1 : 0;
+	}
+	unsigned monthNum;
+	for (monthNum = 11; monthNum > 0; monthNum--)
+	{
+		if (daysRemind > (DaysToMonth[monthNum] + leapDay))
+		{
+			break;
+		}
+	}
+	return IntToMonth(monthNum + 1);
 }
 
 unsigned CDate::GetYear()const
 {
-
+	unsigned daysRemind = m_days;
+	unsigned year = BaseYear;
+	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
+	while (daysRemind >= (NonLeapYearDays + leapDay))
+	{
+		daysRemind -= NonLeapYearDays + leapDay;
+		year++;
+		leapDay = IsYearLeap(year) ? 1 : 0;
+	}
+	return year;
 }
-
-*/
