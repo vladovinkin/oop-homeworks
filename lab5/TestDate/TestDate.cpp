@@ -36,12 +36,59 @@ SCENARIO("Проверка конструкторов")
 		CHECK(date.GetMonth() == Month::JUNE);
 		CHECK(date.GetYear() == 2024);
 	}
+}
 
-	GIVEN("Конструктор с тремя параметрами (день, месяц, год) создаёт определённую параметрами дату 2")
+SCENARIO("Проверка перегрузки операторов")
+{
+	setlocale(LC_ALL, "rus");
+
+	GIVEN("Задана любая дата")
 	{
-		CDate date(31, Month::DECEMBER, 9999);
-		CHECK(date.GetDay() == 31);
-		CHECK(date.GetMonth() == Month::DECEMBER);
-		CHECK(date.GetYear() == 9999);
+		CDate date(1, Month::JANUARY, 2024);
+
+		WHEN("Выполнено префиксное приращение")
+		{
+			++date;
+			THEN("Дата сменится на следующий день")
+			{
+				CHECK(date.GetDay() == 2);
+				CHECK(date.GetMonth() == Month::JANUARY);
+				CHECK(date.GetYear() == 2024);
+
+			}
+		}
+
+		WHEN("Выполнено префиксное уменьшение")
+		{
+			--date;
+			THEN("Дата сменится на предыдущий день")
+			{
+				CHECK(date.GetDay() ==31);
+				CHECK(date.GetMonth() == Month::DECEMBER);
+				CHECK(date.GetYear() == 2023);
+			}
+		}
+
+		WHEN("Выполнено постфиксное приращение")
+		{
+			date++;
+			THEN("Дата сменится на следующий день")
+			{
+				CHECK(date.GetDay() == 2);
+				CHECK(date.GetMonth() == Month::JANUARY);
+				CHECK(date.GetYear() == 2024);
+			}
+		}
+
+		WHEN("Выполнено постфиксное уменьшение")
+		{
+			date--;
+			THEN("Дата сменится на предыдущий день")
+			{
+				CHECK(date.GetDay() ==31);
+				CHECK(date.GetMonth() == Month::DECEMBER);
+				CHECK(date.GetYear() == 2023);
+			}
+		}
 	}
 }

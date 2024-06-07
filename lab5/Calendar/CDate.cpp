@@ -67,11 +67,6 @@ Month CDate::IntToMonth(unsigned monthIndex)const
 	return Month::JANUARY;
 }
 
-CDate CDate::operator +(unsigned days)const
-{
-	return CDate(m_days + days);
-}
-
 unsigned CDate::GetDay()const
 {
 	unsigned daysRemind = m_days;
@@ -131,4 +126,35 @@ unsigned CDate::GetYear()const
 		leapDay = IsYearLeap(year) ? 1 : 0;
 	}
 	return year;
+}
+
+CDate& CDate::operator ++()
+{
+	m_days += 1;
+	return *this;
+}
+
+CDate& CDate::operator --()
+{
+	m_days -= 1;
+	return *this;
+}
+
+CDate CDate::operator ++(int)
+{
+	CDate copy{ *this };
+	++(*this);
+	return copy;
+}
+
+CDate CDate::operator --(int)
+{
+	CDate copy{ *this };
+	--(*this);
+	return copy;
+}
+
+CDate CDate::operator +(unsigned days)const
+{
+	return CDate(m_days + days);
 }

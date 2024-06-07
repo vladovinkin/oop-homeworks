@@ -76,8 +76,21 @@ public:
     // возвращает количество дней, прошедших с 1 января 1970 года
     unsigned GetDays()const;
 
-    // перегрузка опреатора + (date + days)
+    // оператор + (date + days)
     CDate operator +(unsigned days) const;
+
+    // оператор ++ (префикс)
+    CDate& operator ++();
+
+    // оператор -- (префикс)
+    CDate& operator --();
+
+    // оператор ++ (постфикс)
+    CDate operator ++(int);
+
+    // оператор -- (постфикс)
+    CDate operator --(int);
+
 private:
     bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;
