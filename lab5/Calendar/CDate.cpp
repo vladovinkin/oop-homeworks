@@ -49,7 +49,7 @@ WeekDay CDate::IntToWeekDay(unsigned weekDayIndex)const
 	return WeekDay::SUNDAY;
 }
 
-Month CDate::IntToMonth(unsigned monthIndex)const
+Month IntToMonth(unsigned monthIndex)
 {
 	switch (monthIndex)
 	{
@@ -189,6 +189,29 @@ std::ostream& operator <<(std::ostream& stream, CDate const& date)
 		<< TwoDigitFormatUnsigned(date.GetYear());
 	return stream;
 }
+
+std::istream& operator >>(std::istream& stream, CDate& date)
+{
+	unsigned day = 0;
+	unsigned month = 0;
+	unsigned year = 0;
+
+	if (
+		(stream >> day) && (stream.get() == '.')
+		&& (stream >> month) && (stream.get() == '.')
+		&& (stream >> year)
+		)
+	{
+		date = CDate(day, IntToMonth(month), year);
+	}
+	else
+	{
+		stream.setstate(std::ios_base::failbit | stream.rdstate());
+	}
+
+	return stream;
+}
+
 
 std::string TwoDigitFormatUnsigned(unsigned number)
 {

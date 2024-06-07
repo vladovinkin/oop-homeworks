@@ -109,7 +109,6 @@ public:
 private:
     bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;
-    Month IntToMonth(unsigned month)const;
 private:
     unsigned m_days;
 };
@@ -117,5 +116,11 @@ private:
 // оператор + (days + date)
 CDate operator +(unsigned days, CDate const& date);
 
+// оператор <<
 std::ostream& operator <<(std::ostream& stream, CDate const& date);
+
+// оператор >>
+std::istream& operator >>(std::istream& stream, CDate& date);
+
+Month IntToMonth(unsigned month);
 std::string TwoDigitFormatUnsigned(unsigned number);

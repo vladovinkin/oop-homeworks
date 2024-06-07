@@ -206,5 +206,18 @@ SCENARIO("Проверка перегрузки операторов")
 				CHECK(output.str() == "01.01.2024");
 			}
 		}
+
+		WHEN("Вводим дату через поток >>")
+		{
+			std::istringstream input("12.04.2024");
+			input >> date;
+			THEN("В объекте окажется указанная дата")
+			{
+				CHECK(date.GetDay() == 12);
+				CHECK(date.GetMonth() == Month::APRIL);
+				CHECK(date.GetYear() == 2024);
+				CHECK(date.GetWeekDay() == WeekDay::FRIDAY);
+			}
+		}
 	}
 }
