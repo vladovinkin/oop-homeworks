@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include <compare>
 
 // Месяц
 enum class Month
@@ -76,9 +77,6 @@ public:
     // возвращает количество дней, прошедших с 1 января 1970 года
     unsigned GetDays()const;
 
-    // оператор + (date + days)
-    CDate operator +(unsigned days) const;
-
     // оператор ++ (префикс)
     CDate& operator ++();
 
@@ -91,6 +89,15 @@ public:
     // оператор -- (постфикс)
     CDate operator --(int);
 
+    // оператор + (date + days)
+    CDate operator +(unsigned days) const;
+
+    // оператор - (date - days)
+    CDate operator -(unsigned days) const;
+
+    // оператор сравнения (C++ 20)
+    auto operator <=>(const CDate&) const = default;
+
 private:
     bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;
@@ -101,5 +108,10 @@ private:
 
 //CDate operator +(unsigned days, CDate const& date)
 //{
-//    return CDate(days + date.GetDays());
+//    return date + days;
+//}
+
+//CDate operator -(unsigned days, CDate const& date)
+//{
+//    return date - days;
 //}

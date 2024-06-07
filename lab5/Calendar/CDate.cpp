@@ -158,3 +158,8 @@ CDate CDate::operator +(unsigned days)const
 {
 	return CDate(m_days + days);
 }
+
+CDate CDate::operator -(unsigned days)const
+{
+	return CDate(m_days - days);
+}

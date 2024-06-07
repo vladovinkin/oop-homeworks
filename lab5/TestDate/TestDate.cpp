@@ -85,9 +85,82 @@ SCENARIO("Проверка перегрузки операторов")
 			date--;
 			THEN("Дата сменится на предыдущий день")
 			{
-				CHECK(date.GetDay() ==31);
+				CHECK(date.GetDay() == 31);
 				CHECK(date.GetMonth() == Month::DECEMBER);
 				CHECK(date.GetYear() == 2023);
+			}
+		}
+
+		WHEN("Прибавляем к дате определённое количество дней")
+		{
+			CDate newDate = date + 5;
+			THEN("Дата сменится на указанное количество дней")
+			{
+				CHECK(newDate.GetDay() == 6);
+				CHECK(newDate.GetMonth() == Month::JANUARY);
+				CHECK(newDate.GetYear() == 2024);
+			}
+		}
+
+		WHEN("Вычитаем из даты определённое количество дней")
+		{
+			CDate newDate = date - 3;
+			THEN("Дата сменится на указанное количество дней")
+			{
+				CHECK(newDate.GetDay() == 29);
+				CHECK(newDate.GetMonth() == Month::DECEMBER);
+				CHECK(newDate.GetYear() == 2023);
+			}
+		}
+
+		WHEN("Создадим дату больше данной и сравним с исходной")
+		{
+			CDate otherDate = date + 1;
+			THEN("Другая дата не равна исходной")
+			{
+				CHECK(otherDate != date);
+			}
+			THEN("Другая дата больше исходной")
+			{
+				CHECK(otherDate > date);
+			}
+			THEN("Другая дата больше или равна исходной")
+			{
+				CHECK(otherDate >= date);
+			}
+		}
+
+		WHEN("Создадим дату меньше данной и сравним с исходной")
+		{
+			CDate otherDate = date - 1;
+			THEN("Другая дата не равна исходной")
+			{
+				CHECK(otherDate != date);
+			}
+			THEN("Другая дата меньше исходной")
+			{
+				CHECK(otherDate < date);
+			}
+			THEN("Другая дата меньше или равна исходной")
+			{
+				CHECK(otherDate <= date);
+			}
+		}
+
+		WHEN("Создадим дату равную данной и сравним с исходной")
+		{
+			CDate otherDate = date - 1;
+			THEN("Другая дата равна исходной")
+			{
+				CHECK(otherDate == date);
+			}
+			THEN("Другая дата меньше или равна исходной")
+			{
+				CHECK(otherDate <= date);
+			}
+			THEN("Другая дата больше или равна исходной")
+			{
+				CHECK(otherDate >= date);
 			}
 		}
 	}
