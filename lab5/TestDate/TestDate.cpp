@@ -149,7 +149,7 @@ SCENARIO("Проверка перегрузки операторов")
 
 		WHEN("Создадим дату равную данной и сравним с исходной")
 		{
-			CDate otherDate = date - 1;
+			CDate otherDate = date;
 			THEN("Другая дата равна исходной")
 			{
 				CHECK(otherDate == date);
@@ -161,6 +161,28 @@ SCENARIO("Проверка перегрузки операторов")
 			THEN("Другая дата больше или равна исходной")
 			{
 				CHECK(otherDate >= date);
+			}
+		}
+
+		WHEN("Прибавляем к дате определённое количество дней при помощи оператора +=")
+		{
+			date += 365;
+			THEN("Дата сменится на указанное количество дней")
+			{
+				CHECK(date.GetDay() == 31);
+				CHECK(date.GetMonth() == Month::DECEMBER);
+				CHECK(date.GetYear() == 2024);
+			}
+		}
+
+		WHEN("Вычитаем из даты определённое количество дней при помощи оператора -=")
+		{
+			date -= 366;
+			THEN("Дата сменится на указанное количество дней")
+			{
+				CHECK(date.GetDay() == 31);
+				CHECK(date.GetMonth() == Month::DECEMBER);
+				CHECK(date.GetYear() == 2022);
 			}
 		}
 	}

@@ -98,6 +98,12 @@ public:
     // оператор сравнения (C++ 20)
     auto operator <=>(const CDate&) const = default;
 
+    // оператор приращения заданного количества дней +=
+    CDate operator +=(unsigned days);
+
+    // оператор убавления заданного количества дней =
+    CDate operator -=(unsigned days);
+
 private:
     bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;
@@ -111,7 +117,4 @@ private:
 //    return date + days;
 //}
 
-//CDate operator -(unsigned days, CDate const& date)
-//{
-//    return date - days;
-//}
+
