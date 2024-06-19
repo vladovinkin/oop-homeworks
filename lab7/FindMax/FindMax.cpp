@@ -17,6 +17,21 @@ bool FindMax(std::vector<T> const& arr, T& maxValue)
 	return false;
 }
 
+template <>
+bool FindMax<const char *>(std::vector<const char*> const& arr, const char* &maxValue)
+{
+	if (arr.size())
+	{
+		maxValue = arr[0];
+		for (auto i = 1; i < arr.size(); i++)
+		{
+			maxValue = strcmp(maxValue, arr[i]) != -1 ? maxValue : arr[i];
+		}
+		return true;
+	}
+	return false;
+}
+
 int main()
 {
 	std::vector<int> numbers = { 5, 4, 3, 6, 0 };
@@ -40,11 +55,19 @@ int main()
 		std::cout << "max string: " << max3 << "\n";
 	}
 
-	std::vector<std::string> itemsS = { };
+	std::vector<std::string> itemsSE = { };
 	std::string max4;
-	if (FindMax(itemsS, max3))
+	if (FindMax(itemsSE, max3))
 	{
 		std::cout << "max string: " << max4 << "\n";
+	}
+
+	std::vector<const char*> itemsPtr = { "how", "much", "is", "the", "fish" };
+	const char* maxPtr;
+
+	if (FindMax(itemsPtr, maxPtr))
+	{
+		std::cout << "max string: " << maxPtr << "\n";
 	}
 
 	return 0;
