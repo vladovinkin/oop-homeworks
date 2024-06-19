@@ -1,1 +1,2 @@
-﻿#include "CUrlParsingError.h"
+﻿#include "stdafx.h"
+#include "CUrlParsingError.h"

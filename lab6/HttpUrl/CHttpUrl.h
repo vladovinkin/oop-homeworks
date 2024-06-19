@@ -1,5 +1,14 @@
 ﻿#pragma once
 #include "CUrlParsingError.h"
+#include <cctype>
+
+enum class Protocol
+{
+    HTTP,
+    HTTPS
+};
+
+// TODO: выучить гарантии безопасности исключений и их отличия
 
 class CHttpUrl
 {
@@ -50,7 +59,21 @@ public:
 
     // возвращает номер порта
     unsigned short GetPort()const;
+
+    // переводит строку в нижний регистр
+    static std::string ToLowerString(const std::string& s)
+    {
+        std::string out = "";
+        for (auto i = 0; i < s.length(); i++)
+        {
+            out += std::tolower(s[i]);
+        }
+        return out;
+    }
 private:
+    void SetUrl();
+    bool ParseUrl(const std::string&);
+    std::string m_url;
     std::string m_domain;
     std::string m_document;
     unsigned short m_port;
