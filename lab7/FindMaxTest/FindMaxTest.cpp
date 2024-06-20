@@ -90,20 +90,12 @@ SCENARIO("Проверка массивов объектов классов")
 	class Some
 	{
 	public:
-		Some() { throw std::exception("Some error!"); }
-	};
+		Some() = default;
+		Some(const Some&) { throw std::exception("Some error!"); }
 
-	GIVEN("Функция c пустым массивом объектов...")
-	{
-		/*try
-		{
-			std::vector<Some> somes = {};
-			Some maxSome;
-			CHECK(!FindMax(somes, maxSome));
-		}
-		catch (std::exception &e)
-		{
-			std::cout << e.what() << "\n";
-		}*/
-	}
+		Some& operator>(Some&) { return *this; };
+
+	private:
+		int m_duck;
+	};
 }
