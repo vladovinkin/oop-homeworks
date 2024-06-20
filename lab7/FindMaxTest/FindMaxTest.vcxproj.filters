@@ -15,12 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="FindMax.cpp">
+    <ClCompile Include="FindMaxTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FindMaxT.h">
+    <ClInclude Include="..\FindMax\FindMaxT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
