@@ -18,7 +18,7 @@ void ParseUrlAndOutputResult(IO io)
 		try
 		{
 			CHttpUrl httpUrl = CHttpUrl(in);
-			io.output << httpUrl.GetURL() << "\n";
+			io.output << httpUrl.GetPort() << "\n";
 		} // выяснить подробности про срезку
 		catch (CUrlParsingError& e)
 		{
