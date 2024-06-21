@@ -75,10 +75,9 @@ CHttpUrl::CHttpUrl(
 	Protocol protocol) :
 		m_protocol(protocol)
 {
-	// проверить все составляющие на корректность
-	// занести в поля
-	// значение порта выставить в соответствие с протоколом
-
+	ParseDomain(domain);
+	m_document = document;
+	m_port = protocol == Protocol::HTTP ? 80 : 443;
 	SetUrl();
 }
 
@@ -89,8 +88,13 @@ CHttpUrl::CHttpUrl(
 	unsigned short port) :
 	m_protocol(protocol)
 {
-	// проверить все составляющие на корректность
-	// занести в поля
+	ParseDomain(domain);
+	m_document = document;
+	if (port < 1 || port > 65535)
+	{
+		throw CUrlParsingError("Used invalid port value");
+	}
+	m_port = port;
 
 	SetUrl();
 }
@@ -129,8 +133,7 @@ void CHttpUrl::SetUrl()
 	if (m_port != 80 && m_port != 443)
 	{
 		m_url += ":";
-		m_url += (unsigned)m_port;
-
+		m_url += std::to_string(m_port);
 	}
 	m_url += m_document;
 }
