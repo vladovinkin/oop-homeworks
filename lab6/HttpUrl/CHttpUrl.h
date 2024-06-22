@@ -74,7 +74,7 @@ public:
     // получает данные порта из сырых данных парсинга
     void ParsePortValue(const std::string& rawPortData);
 
-    // Function to validate the domain name.
+    // валидация и присвоение доменного имени
     void ParseDomainName(const std::string &str);
     bool ParseDomain(const std::string& str);
     bool ParseLocal(const std::string& str);

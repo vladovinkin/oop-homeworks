@@ -71,6 +71,10 @@ bool CHttpUrl::ParseIpv4(const std::string& str)
 
 void CHttpUrl::ParsePortValue(const std::string& rawPortData)
 {
+	if (rawPortData.length() == 1)
+	{
+		throw CUrlParsingError("Port value not fount after port prefix");
+	}
 	std::string portString = rawPortData.empty() ? "" : rawPortData.substr(1);
 	if (portString.empty())
 	{
@@ -148,7 +152,7 @@ void CHttpUrl::SetUrl()
 	m_url = "";
 	m_url += m_protocol == Protocol::HTTP ? "http" : "https";
 	m_url += "://" + m_domain;
-	if (m_port != 80 && m_port != 443)
+	if ((m_port != 80 && m_port != 443) || (m_port == 80 && m_protocol == Protocol::HTTPS) || (m_port == 443 && m_protocol == Protocol::HTTP))
 	{
 		m_url += ":";
 		m_url += std::to_string(m_port);

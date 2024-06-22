@@ -5,10 +5,10 @@
 CDate::CDate(unsigned day, Month month, unsigned year)
 {
 	unsigned timestamp = (IsYearLeap(year) && month >= Month::MARCH) ? 1 : 0;
-	// тспользовать проверенный индекс
+	// использовать проверенный индекс
 	timestamp += DaysToMonth[unsigned(month) - 1];
 	// некорректно определяется високосный год
-	timestamp += ((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 - (year - 1901) / 200);
+	timestamp += ((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 + (year - 1601) / 400) - (year - 1901) / 100;
 	timestamp += day - 1;
 	m_days = timestamp;
 }
