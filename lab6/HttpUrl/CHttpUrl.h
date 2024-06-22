@@ -75,7 +75,10 @@ public:
     void ParsePortValue(const std::string& rawPortData);
 
     // Function to validate the domain name.
-    void ParseDomain(const std::string &str);
+    void ParseDomainName(const std::string &str);
+    bool ParseDomain(const std::string& str);
+    bool ParseLocal(const std::string& str);
+    bool ParseIpv4(const std::string& str);
 private:
     void SetUrl();
     bool ParseUrl(const std::string&);

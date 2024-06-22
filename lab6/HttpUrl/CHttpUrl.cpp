@@ -14,6 +14,9 @@ CHttpUrl::CHttpUrl(std::string const& url)
 	}
 }
 
+// программа должна принимать домены без точек (+)
+// программа должна принимать IP адреса (+)
+
 bool CHttpUrl::ParseUrl(const std::string& url)
 {
 	const std::regex r(R"(([hH][tT][tT][pP][sS]?)://([^:^/]*)(:-?\d*)?(.*)?)");
@@ -23,7 +26,7 @@ bool CHttpUrl::ParseUrl(const std::string& url)
 	if (m.size())
 	{
 		m_protocol = CHttpUrl::ToLowerString(m[1].str()) == "http" ? Protocol::HTTP : Protocol::HTTPS;
-		ParseDomain(CHttpUrl::ToLowerString(m[2].str()));
+		ParseDomainName(CHttpUrl::ToLowerString(m[2].str()));
 		ParsePortValue(m[3].str());
 		m_document = m[4].str();
 		return true;
@@ -31,17 +34,14 @@ bool CHttpUrl::ParseUrl(const std::string& url)
 	return false;
 }
 
-void CHttpUrl::ParseDomain(const std::string &str)
+void CHttpUrl::ParseDomainName(const std::string &str)
 {
-	// Regex to check valid domain name.
-	const std::regex pattern("^(?!-)[A-Za-z0-9-]+([\\-\\.]{1}[a-z0-9]+)*\\.[A-Za-z]{2,6}$");
-
 	if (str.empty())
 	{
 		throw CUrlParsingError("Empty domain in url");
 	}
 
-	if (regex_match(str, pattern))
+	if (ParseDomain(str) || ParseLocal(str) || ParseIpv4(str))
 	{
 		m_domain = str;
 	}
@@ -49,6 +49,24 @@ void CHttpUrl::ParseDomain(const std::string &str)
 	{
 		throw CUrlParsingError("Invalid domain in url");
 	}
+}
+
+bool CHttpUrl::ParseDomain(const std::string& str)
+{
+	const std::regex patternDomain("^(?!-)[A-Za-z0-9-]+([\\-\\.]{1}[a-z0-9]+)*\\.[A-Za-z]{2,6}$");
+	return regex_match(str, patternDomain);
+}
+
+bool CHttpUrl::ParseLocal(const std::string& str)
+{
+	const std::regex patternLocal("^(?!-)[A-Za-z0-9-]+$");
+	return regex_match(str, patternLocal);
+}
+
+bool CHttpUrl::ParseIpv4(const std::string& str)
+{
+	const std::regex patternIpv4("(([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])");
+	return regex_match(str, patternIpv4);
 }
 
 void CHttpUrl::ParsePortValue(const std::string& rawPortData)
