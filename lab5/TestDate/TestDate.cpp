@@ -42,6 +42,12 @@ SCENARIO("Проверка конструкторов")
 		CDate date(7, Month::JUNE, 2250);
 		CHECK(date.GetWeekDay() == WeekDay::FRIDAY);
 	}
+
+	GIVEN("Конструктор с тремя параметрами (день, месяц, год) создаёт определённую параметрами дату")
+	{
+		CDate date(31, Month::DECEMBER, 9999);
+		CHECK(date.GetDays() == 2932896);
+	}
 }
 
 SCENARIO("Проверка перегрузки операторов")
@@ -227,3 +233,23 @@ SCENARIO("Проверка перегрузки операторов")
 		}
 	}
 }
+
+TEST_CASE("Разность двух дат - даты разные")
+{
+	setlocale(LC_ALL, "rus");
+
+	CDate date1(29, Month::MAY, 1982);
+	CDate date2(23, Month::JUNE, 2024);
+	CHECK(date1 - date2 == 15366);
+	CHECK(date2 - date1 == 15366);
+}
+
+TEST_CASE("Разность двух дат - даты одинаковые")
+{
+	setlocale(LC_ALL, "rus");
+
+	CDate date1(23, Month::JUNE, 2024);
+	CDate date2(23, Month::JUNE, 2024);
+	CHECK(date1 - date2 == 0);
+}
+

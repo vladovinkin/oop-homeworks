@@ -5,9 +5,12 @@
 CDate::CDate(unsigned day, Month month, unsigned year)
 {
 	unsigned timestamp = (IsYearLeap(year) && month >= Month::MARCH) ? 1 : 0;
-	// использовать проверенный индекс
-	timestamp += DaysToMonth[unsigned(month) - 1];
-	// некорректно определяется високосный год
+
+	// использовать проверенный индекс (+)
+	unsigned dayToMonthIdx = unsigned(month) - 1;
+	timestamp += DaysToMonth[dayToMonthIdx];
+
+	// некорректно определяется високосный год (+)
 	timestamp += ((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 + (year - 1601) / 400) - (year - 1901) / 100;
 	timestamp += day - 1;
 	m_days = timestamp;
@@ -15,7 +18,7 @@ CDate::CDate(unsigned day, Month month, unsigned year)
 
 CDate::CDate(unsigned timestamp)
 {
-	m_days = timestamp;
+	m_days = static_cast<int>(timestamp);
 }
 
 CDate::CDate()
@@ -173,6 +176,14 @@ CDate CDate::operator -(unsigned days)const
 	return CDate(m_days - days);
 }
 
+unsigned CDate::operator -(const CDate& date) const
+{
+	unsigned dateDays = date.GetDays();
+	return m_days > dateDays
+		? m_days - dateDays
+		: dateDays - m_days;
+}
+
 CDate CDate::operator +=(unsigned days)
 {
 	m_days += days;
@@ -189,7 +200,7 @@ std::ostream& operator <<(std::ostream& stream, CDate const& date)
 {
 	stream << TwoDigitFormatUnsigned(date.GetDay()) << "."
 		<< TwoDigitFormatUnsigned((unsigned)date.GetMonth()) << "."
-		<< TwoDigitFormatUnsigned(date.GetYear());
+		<< date.GetYear();
 	return stream;
 }
 
@@ -215,8 +226,12 @@ std::istream& operator >>(std::istream& stream, CDate& date)
 	return stream;
 }
 
-
 std::string TwoDigitFormatUnsigned(unsigned number)
 {
 	return (number < 10 ? "0" : "") + std::to_string(number);
+}
+
+unsigned LeapYearsInRange(unsigned years)
+{
+	return 0;
 }

@@ -20,6 +20,8 @@ enum class WeekDay
 
 constexpr unsigned NonLeapYearDays = 365;
 constexpr unsigned BaseYear = 1970;
+constexpr unsigned minDays = 0;
+constexpr unsigned maxDays = 2932896;
 
 constexpr unsigned DaysBeforeJanuary = 0;
 constexpr unsigned DaysBeforeFebruary = DaysBeforeJanuary + 31;
@@ -98,6 +100,9 @@ public:
     // оператор - (date - days)
     CDate operator -(unsigned days) const;
 
+    // оператор - (date - date)
+    unsigned operator -(const CDate&) const;
+
     // оператор сравнения (C++ 20)
     auto operator <=>(const CDate&) const = default;
 
@@ -125,3 +130,5 @@ std::istream& operator >>(std::istream& stream, CDate& date);
 
 Month IntToMonth(unsigned month);
 std::string TwoDigitFormatUnsigned(unsigned number);
+
+unsigned LeapYearsInRange(unsigned years);
