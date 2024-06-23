@@ -36,15 +36,16 @@ WeekDay CDate::GetWeekDay()const
 	return IntToWeekDay((m_days + 4) % 7);
 }
 
-bool CDate::IsYearLeap(unsigned year)const
+bool IsYearLeap(unsigned year)
 {
-	return (year % 200 == 0) || ((year % 4 == 0) && (year % 100 != 0));
+	return (year % 400 == 0) || ((year % 4 == 0) && (year % 100 != 0));
 }
 
 WeekDay CDate::IntToWeekDay(unsigned weekDayIndex)const
 {
 	switch (weekDayIndex)
 	{
+		case 0: return WeekDay::SUNDAY;
 		case 1: return WeekDay::MONDAY;
 		case 2: return WeekDay::TUESDAY;
 		case 3: return WeekDay::WEDNESDAY;
@@ -52,13 +53,14 @@ WeekDay CDate::IntToWeekDay(unsigned weekDayIndex)const
 		case 5: return WeekDay::FRIDAY;
 		case 6: return WeekDay::SATURDAY;
 	}
-	return WeekDay::SUNDAY;
+	return WeekDay::NO_WEEKDAY;
 }
 
 Month IntToMonth(unsigned monthIndex)
 {
 	switch (monthIndex)
 	{
+		case 1: return Month::JANUARY;
 		case 2: return Month::FEBRUARY;
 		case 3: return Month::MARCH;
 		case 4: return Month::APRIL;
@@ -71,20 +73,14 @@ Month IntToMonth(unsigned monthIndex)
 		case 11: return Month::NOVEMBER;
 		case 12: return Month::DECEMBER;
 	}
-	return Month::JANUARY;
+	return Month::NO_MONTH;
 }
 
 unsigned CDate::GetDay()const
 {
-	unsigned daysRemind = m_days;
-	unsigned year = BaseYear;
+	unsigned year = GetYear();
+	unsigned daysRemind = m_days - (((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 + (year - 1601) / 400) - (year - 1901) / 100);
 	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
-	while (daysRemind >= (NonLeapYearDays + leapDay))
-	{
-		daysRemind -= (NonLeapYearDays + leapDay);
-		year++;
-		leapDay = IsYearLeap(year) ? 1 : 0;
-	}
 	unsigned monthNum;
 	unsigned daysToMonthReal;
 	for (monthNum = 11; monthNum > 0; monthNum--)
@@ -95,25 +91,22 @@ unsigned CDate::GetDay()const
 			break;
 		}
 	}
+
 	daysToMonthReal = DaysToMonth[monthNum] + (monthNum > 1 ? leapDay : 0);
 	return daysRemind - daysToMonthReal + 1;
 }
 
 Month CDate::GetMonth()const
 {
-	unsigned daysRemind = m_days;
-	unsigned year = BaseYear;
+	unsigned year = GetYear();
+	unsigned daysRemind = m_days - (((year - BaseYear) * NonLeapYearDays + (year - 1969) / 4 + (year - 1601) / 400) - (year - 1901) / 100);
 	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
-	while (daysRemind >= (NonLeapYearDays + leapDay))
-	{
-		daysRemind -= NonLeapYearDays + leapDay;
-		year++;
-		leapDay = IsYearLeap(year) ? 1 : 0;
-	}
 	unsigned monthNum;
+	unsigned daysToMonthReal;
 	for (monthNum = 11; monthNum > 0; monthNum--)
 	{
-		if (daysRemind > (DaysToMonth[monthNum] + leapDay))
+		daysToMonthReal = DaysToMonth[monthNum] + (monthNum > 1 ? leapDay : 0);
+		if (daysRemind > daysToMonthReal)
 		{
 			break;
 		}
@@ -123,16 +116,7 @@ Month CDate::GetMonth()const
 
 unsigned CDate::GetYear()const
 {
-	unsigned daysRemind = m_days;
-	unsigned year = BaseYear;
-	unsigned leapDay = IsYearLeap(year) ? 1 : 0;
-	while (daysRemind >= (NonLeapYearDays + leapDay))
-	{
-		daysRemind -= NonLeapYearDays + leapDay;
-		year++;
-		leapDay = IsYearLeap(year) ? 1 : 0;
-	}
-	return year;
+	return BaseYear + ((m_days - (LeapYearsInRange(m_days / NonLeapYearDays))) / NonLeapYearDays);
 }
 
 CDate& CDate::operator ++()
@@ -233,5 +217,5 @@ std::string TwoDigitFormatUnsigned(unsigned number)
 
 unsigned LeapYearsInRange(unsigned years)
 {
-	return 0;
+	return years / 4 - years / 100 + years / 400;
 }

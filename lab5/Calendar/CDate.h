@@ -8,14 +8,14 @@ enum class Month
 {
     JANUARY = 1, FEBRUARY, MARCH, APRIL,
     MAY, JUNE, JULY, AUGUST, SEPTEMBER,
-    OCTOBER, NOVEMBER, DECEMBER
+    OCTOBER, NOVEMBER, DECEMBER, NO_MONTH
 };
 
 // День недели
 enum class WeekDay
 {
     SUNDAY = 0, MONDAY, TUESDAY, WEDNESDAY,
-    THURSDAY, FRIDAY, SATURDAY
+    THURSDAY, FRIDAY, SATURDAY, NO_WEEKDAY
 };
 
 constexpr unsigned NonLeapYearDays = 365;
@@ -113,7 +113,6 @@ public:
     CDate operator -=(unsigned days);
 
 private:
-    bool IsYearLeap(unsigned year)const;
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;
 private:
     unsigned m_days;
@@ -132,3 +131,4 @@ Month IntToMonth(unsigned month);
 std::string TwoDigitFormatUnsigned(unsigned number);
 
 unsigned LeapYearsInRange(unsigned years);
+bool IsYearLeap(unsigned year);

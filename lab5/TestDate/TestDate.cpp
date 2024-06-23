@@ -189,12 +189,13 @@ SCENARIO("Проверка перегрузки операторов")
 
 		WHEN("Прибавляем к дате определённое количество дней при помощи оператора +=")
 		{
-			date += 365;
+			date += 366;
 			THEN("Дата сменится на указанное количество дней")
 			{
-				CHECK(date.GetDay() == 31);
-				CHECK(date.GetMonth() == Month::DECEMBER);
-				CHECK(date.GetYear() == 2024);
+				CHECK(date.GetDay() == 1);
+				CHECK(date.GetMonth() == Month::JANUARY);
+				CHECK(date.GetYear() == 2025);
+
 			}
 		}
 
@@ -252,4 +253,3 @@ TEST_CASE("Разность двух дат - даты одинаковые")
 	CDate date2(23, Month::JUNE, 2024);
 	CHECK(date1 - date2 == 0);
 }
-
