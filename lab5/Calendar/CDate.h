@@ -98,7 +98,7 @@ public:
     CDate operator +(int days) const;
 
     // оператор - (date - days)
-    CDate operator -(unsigned days) const;
+    CDate operator -(int days) const;
 
     // оператор - (date - date)
     int operator -(const CDate&) const;
@@ -107,10 +107,10 @@ public:
     auto operator <=>(const CDate&) const = default;
 
     // оператор приращения заданного количества дней +=
-    CDate operator +=(unsigned days);
+    CDate operator +=(int days);
 
     // оператор убавления заданного количества дней =
-    CDate operator -=(unsigned days);
+    CDate operator -=(int days);
 
 private:
     WeekDay IntToWeekDay(unsigned weekDayIndex)const;

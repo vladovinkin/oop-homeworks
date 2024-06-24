@@ -155,7 +155,7 @@ CDate operator +(int days, CDate const& date)
     return date + days;
 }
 
-CDate CDate::operator -(unsigned days)const
+CDate CDate::operator -(int days)const
 {
 	return CDate(m_days - days);
 }
@@ -165,13 +165,13 @@ int CDate::operator -(const CDate& date) const
 	return m_days - date.GetDays();
 }
 
-CDate CDate::operator +=(unsigned days)
+CDate CDate::operator +=(int days)
 {
 	m_days += days;
 	return *this;
 }
 
-CDate CDate::operator -=(unsigned days)
+CDate CDate::operator -=(int days)
 {
 	m_days -= days;
 	return *this;

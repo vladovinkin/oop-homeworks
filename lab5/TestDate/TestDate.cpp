@@ -281,3 +281,14 @@ TEST_CASE("Сложение отрицательного количества д
 	CHECK((days + date).GetMonth() == Month::JUNE);
 	CHECK((days + date).GetYear() == 2024);
 }
+
+TEST_CASE("Вычитание из даты отрицательного количества дней")
+{
+	setlocale(LC_ALL, "rus");
+
+	CDate date(24, Month::JUNE, 2024);
+	int days = -30;
+	CHECK((date - days).GetDay() == 24);
+	CHECK((date - days).GetMonth() == Month::JULY);
+	CHECK((date - days).GetYear() == 2024);
+}
