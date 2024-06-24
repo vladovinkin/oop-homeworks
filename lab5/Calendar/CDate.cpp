@@ -1,7 +1,7 @@
 ﻿#include "CDate.h"
 #include <string>
 
-// добавить проверку на ввод невалидной даты
+// добавить проверку на ввод невалидной даты (-)
 CDate::CDate(unsigned day, Month month, unsigned year)
 {
 	unsigned timestamp = (IsYearLeap(year) && month >= Month::MARCH) ? 1 : 0;
@@ -145,12 +145,12 @@ CDate CDate::operator --(int)
 	return copy;
 }
 
-CDate CDate::operator +(unsigned days)const
+CDate CDate::operator +(int days)const
 {
 	return CDate(m_days + days);
 }
 
-CDate operator +(unsigned days, CDate const& date)
+CDate operator +(int days, CDate const& date)
 {
     return date + days;
 }
@@ -160,12 +160,9 @@ CDate CDate::operator -(unsigned days)const
 	return CDate(m_days - days);
 }
 
-unsigned CDate::operator -(const CDate& date) const
+int CDate::operator -(const CDate& date) const
 {
-	unsigned dateDays = date.GetDays();
-	return m_days > dateDays
-		? m_days - dateDays
-		: dateDays - m_days;
+	return m_days - date.GetDays();
 }
 
 CDate CDate::operator +=(unsigned days)

@@ -95,13 +95,13 @@ public:
     CDate operator --(int);
 
     // оператор + (date + days)
-    CDate operator +(unsigned days) const;
+    CDate operator +(int days) const;
 
     // оператор - (date - days)
     CDate operator -(unsigned days) const;
 
     // оператор - (date - date)
-    unsigned operator -(const CDate&) const;
+    int operator -(const CDate&) const;
 
     // оператор сравнения (C++ 20)
     auto operator <=>(const CDate&) const = default;
@@ -119,7 +119,7 @@ private:
 };
 
 // оператор + (days + date)
-CDate operator +(unsigned days, CDate const& date);
+CDate operator +(int days, CDate const& date);
 
 // оператор <<
 std::ostream& operator <<(std::ostream& stream, CDate const& date);
