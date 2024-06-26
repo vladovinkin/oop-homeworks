@@ -3,5 +3,5 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    std::cout << "Please, start MyStaskTest project!\n";
 }

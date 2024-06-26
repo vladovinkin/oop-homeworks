@@ -18,9 +18,6 @@
     <ClCompile Include="MyStackTest.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CMyStack\CMyStack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CMyStack\CMyStack.h">

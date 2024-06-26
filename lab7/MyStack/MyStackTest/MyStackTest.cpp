@@ -3,8 +3,11 @@
 #include "../../../catch2/catch.hpp"
 #include "../CMyStack/CMyStack.h"
 
-TEST_CASE("Sample test")
+TEST_CASE("Create empty stack")
 {
 	setlocale(LC_ALL, "rus");
-	REQUIRE(true);
+
+	CMyStack<int> stack = CMyStack<int>();
+
+	REQUIRE(stack.Empty() == true);
 }
