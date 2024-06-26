@@ -11,12 +11,12 @@ public:
 	T& Top() const;
 	void Push(const T& value);
 	int Size()const;
-	/*
 	void Pop();
-	void Clear();*/
+	void Clear();
 private:
 	template<typename Ty>
-	struct Stack_Node {
+	struct Stack_Node
+	{
 		Ty m_data;
 		Stack_Node* m_next;
 		Stack_Node(const Ty& _data, const Stack_Node* _next) :m_data((Ty)_data), m_next((Stack_Node*)_next) {}
@@ -34,7 +34,8 @@ template <typename T>
 CMyStack<T>::~CMyStack() noexcept
 {
 	Stack_Node<T>* temp = m_top;
-	while (m_top) {
+	while (m_top)
+	{
 		m_top = m_top->m_next;
 		delete temp;
 		temp = m_top;
@@ -68,4 +69,26 @@ template<typename T>
 int CMyStack<T>::Size()const
 {
 	return m_size;
+}
+
+template<typename T>
+void CMyStack<T>::Pop()
+{
+	if (!m_top)
+	{
+		return;
+	}
+	Stack_Node<T>* temp = m_top;
+	m_top = m_top->m_next;
+	delete temp;
+	--m_size;
+}
+
+template<typename T>
+void CMyStack<T>::Clear()
+{
+	while (m_top)
+	{
+		Pop();
+	}
 }
