@@ -6,6 +6,7 @@ class CMyStack
 {
 public:
 	CMyStack() noexcept;
+	CMyStack(CMyStack&);
 	~CMyStack() noexcept;
 	bool Empty() const;
 	T& Top() const;
@@ -14,14 +15,16 @@ public:
 	void Pop();
 	void Clear();
 private:
-	template<typename Ty>
-	struct Stack_Node
+	void SwapStack(CMyStack<T>&) noexcept;
+private:
+	struct StackNode
 	{
-		Ty m_data;
-		Stack_Node* m_next;
-		Stack_Node(const Ty& _data, const Stack_Node* _next) :m_data((Ty)_data), m_next((Stack_Node*)_next) {}
+		T m_data;
+		StackNode* m_prev;
+		StackNode(const T& _data, StackNode* _prev) 
+			:m_data(_data), m_prev(_prev) {}
 	};
-	Stack_Node<T>* m_top;
+	StackNode* m_top;
 	int m_size;
 };
 
@@ -31,12 +34,44 @@ CMyStack<T>::CMyStack() noexcept
 {}
 
 template <typename T>
+CMyStack<T>::CMyStack(CMyStack& from)
+{
+	if (from.Empty())
+	{
+		return;
+	}
+	CMyStack tempStack;
+	StackNode* nodeFrom = from.m_top;
+	StackNode* prev = nullptr;
+
+	while (nodeFrom != nullptr)
+	{
+		StackNode* nodeNew = new StackNode(nodeFrom->m_data, nullptr);
+
+		if (prev == nullptr)
+		{
+			tempStack.m_top = nodeNew;
+		}
+		else
+		{
+			prev->m_prev = nodeNew;
+		}
+
+		prev = nodeNew;
+		nodeFrom = nodeFrom->m_prev;
+		++tempStack.m_size;
+	}
+	
+	SwapStack(tempStack);
+}
+
+template <typename T>
 CMyStack<T>::~CMyStack() noexcept
 {
-	Stack_Node<T>* temp = m_top;
+	StackNode* temp = m_top;
 	while (m_top)
 	{
-		m_top = m_top->m_next;
+		m_top = m_top->m_prev;
 		delete temp;
 		temp = m_top;
 	}
@@ -61,7 +96,7 @@ T& CMyStack<T>::Top()const
 template<typename T>
 void CMyStack<T>::Push(const T& value) 
 {
-	m_top = new Stack_Node<T>(value, m_top);
+	m_top = new StackNode(value, m_top);
 	++m_size;
 }
 
@@ -78,8 +113,8 @@ void CMyStack<T>::Pop()
 	{
 		return;
 	}
-	Stack_Node<T>* temp = m_top;
-	m_top = m_top->m_next;
+	StackNode* temp = m_top;
+	m_top = m_top->m_prev;
 	delete temp;
 	--m_size;
 }
@@ -91,4 +126,11 @@ void CMyStack<T>::Clear()
 	{
 		Pop();
 	}
+}
+
+template <typename T>
+void CMyStack<T>::SwapStack(CMyStack<T>& stack) noexcept
+{
+	std::swap(m_size, stack.m_size);
+	std::swap(m_top, stack.m_top);
 }

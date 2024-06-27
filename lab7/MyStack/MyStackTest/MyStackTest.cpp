@@ -79,6 +79,36 @@ TEST_CASE("В стек целых чисел добавил одно целое 
 	CHECK(stack.Size() == 0);
 }
 
+TEST_CASE("Создал стек, добавил три целых числа и на основе его создал ещё стек")
+{
+	setlocale(LC_ALL, "rus");
+
+	CMyStack<int> stack = CMyStack<int>();
+	stack.Push(11);
+	stack.Push(22);
+	stack.Push(33);
+
+	CMyStack<int> newStack = CMyStack<int>(stack);
+
+	CHECK(newStack.Empty() == false);
+	CHECK(newStack.Size() == 3);
+	CHECK(newStack.Top() == 33);
+
+	newStack.Pop();
+
+	CHECK(newStack.Size() == 2);
+	CHECK(newStack.Top() == 22);
+
+	newStack.Pop();
+
+	CHECK(newStack.Size() == 1);
+	CHECK(newStack.Top() == 11);
+
+	newStack.Pop();
+
+	CHECK(newStack.Empty() == true);
+	CHECK(newStack.Size() == 0);
+}
 
 TEST_CASE("Создал пустой стек строк")
 {
