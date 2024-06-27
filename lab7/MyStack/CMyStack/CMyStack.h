@@ -1,19 +1,22 @@
 ﻿#pragma once
-//#include <cstddef>
+#include <algorithm>
 
 template <typename T>
 class CMyStack
 {
 public:
 	CMyStack() noexcept;
-	CMyStack(CMyStack&);
+	CMyStack(const CMyStack<T>&);
+	CMyStack(CMyStack<T>&&) noexcept;
 	~CMyStack() noexcept;
 	bool Empty() const;
 	T& Top() const;
-	void Push(const T& value);
-	int Size()const;
+	void Push(const T&);
+	int Size()const noexcept;
 	void Pop();
-	void Clear();
+	void Clear() noexcept;
+	CMyStack<T>& operator=(const CMyStack<T>&);
+	CMyStack<T>& operator=(CMyStack<T>&&) noexcept;
 private:
 	void SwapStack(CMyStack<T>&) noexcept;
 private:
@@ -34,7 +37,7 @@ CMyStack<T>::CMyStack() noexcept
 {}
 
 template <typename T>
-CMyStack<T>::CMyStack(CMyStack& from)
+CMyStack<T>::CMyStack(const CMyStack& from)
 {
 	if (from.Empty())
 	{
@@ -66,15 +69,18 @@ CMyStack<T>::CMyStack(CMyStack& from)
 }
 
 template <typename T>
+CMyStack<T>::CMyStack(CMyStack<T>&& stack) noexcept
+	: m_size(stack.m_size)
+	, m_top(stack.m_top)
+{
+	stack.m_size = 0;
+	stack.m_top = nullptr;
+}
+
+template <typename T>
 CMyStack<T>::~CMyStack() noexcept
 {
-	StackNode* temp = m_top;
-	while (m_top)
-	{
-		m_top = m_top->m_prev;
-		delete temp;
-		temp = m_top;
-	}
+	Clear();
 }
 
 template <typename T>
@@ -101,7 +107,7 @@ void CMyStack<T>::Push(const T& value)
 }
 
 template<typename T>
-int CMyStack<T>::Size()const
+int CMyStack<T>::Size()const noexcept
 {
 	return m_size;
 }
@@ -109,9 +115,9 @@ int CMyStack<T>::Size()const
 template<typename T>
 void CMyStack<T>::Pop()
 {
-	if (!m_top)
+	if (Empty())
 	{
-		return;
+		throw std::logic_error("Stack is empty");
 	}
 	StackNode* temp = m_top;
 	m_top = m_top->m_prev;
@@ -120,12 +126,34 @@ void CMyStack<T>::Pop()
 }
 
 template<typename T>
-void CMyStack<T>::Clear()
+void CMyStack<T>::Clear() noexcept
 {
-	while (m_top)
+	while (!Empty())
 	{
 		Pop();
 	}
+}
+
+template <typename T>
+CMyStack<T>& CMyStack<T>::operator=(CMyStack<T>&& stack) noexcept
+{
+	if (&stack != this)
+	{
+		Clear();
+		SwapStack(stack);
+	}
+	return *this;
+}
+
+template <typename T>
+CMyStack<T>& CMyStack<T>::operator=(const CMyStack<T>& stack)
+{
+	if (&stack != this)
+	{
+		CMyStack tempStack(stack);
+		SwapStack(tempStack);
+	}
+	return *this;
 }
 
 template <typename T>

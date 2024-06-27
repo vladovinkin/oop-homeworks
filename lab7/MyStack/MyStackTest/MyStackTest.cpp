@@ -11,6 +11,7 @@ TEST_CASE("Создал пустой стек целых чисел")
 	CMyStack<int> stack = CMyStack<int>();
 
 	CHECK(stack.Empty() == true);
+	CHECK_THROWS_AS(stack.Top(), std::logic_error);
 }
 
 TEST_CASE("Добавил в стек целых чисел два целых числа")
@@ -72,8 +73,8 @@ TEST_CASE("В стек целых чисел добавил одно целое 
 	CMyStack<int> stack = CMyStack<int>();
 	stack.Push(11);
 	stack.Pop();
-	stack.Pop();
-	stack.Pop();
+	CHECK_THROWS_AS(stack.Pop(), std::logic_error);
+	CHECK_THROWS_AS(stack.Pop(), std::logic_error);
 
 	CHECK(stack.Empty() == true);
 	CHECK(stack.Size() == 0);
@@ -114,7 +115,7 @@ TEST_CASE("Создал пустой стек строк")
 {
 	setlocale(LC_ALL, "rus");
 
-	CMyStack<std::string> stack = CMyStack<std::string>();
+	CMyStack<std::string> stack;
 
 	CHECK(stack.Empty() == true);
 }
@@ -131,4 +132,31 @@ TEST_CASE("Добавил в стек строк три элемента")
 	CHECK(stack.Empty() == false);
 	CHECK(stack.Top() == "Fifteen");
 	CHECK(stack.Size() == 3);
+}
+
+TEST_CASE("Оператор присваивания")
+{
+	setlocale(LC_ALL, "rus");
+
+	CMyStack<std::string> stack = CMyStack<std::string>();
+	stack.Push("One");
+	stack.Push("Two");
+	stack.Push("Zero");
+
+	CMyStack<std::string> second;
+	second = stack;
+
+	CHECK(second.Top() == "Zero");
+	CHECK(second.Size() == 3);
+
+	stack.Pop();
+	stack.Pop();
+
+	second.Push("Four");
+
+	CHECK(stack.Size() == 1);
+	CHECK(stack.Top() == "One");
+
+	CHECK(second.Size() == 4);
+	CHECK(second.Top() == "Four");
 }
