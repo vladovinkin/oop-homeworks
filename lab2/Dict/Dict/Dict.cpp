@@ -79,6 +79,25 @@ Dict CreateDict(int argc, char* argv[])
 	return dict;
 }
 
+void SaveDict(Dict dict)
+{
+	std::ofstream file;
+	file.open(dict.fileName);
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Ошибка открытия файла '" + dict.fileName + "' для записи");
+	}
+
+	for (auto iter{ dict.dict.cbegin() }; iter != dict.dict.cend(); iter++)
+	{
+		file << iter->first << "\n" << iter->second << '\n';
+	}
+	if (!file.flush())
+	{
+		throw std::runtime_error("Ошибка записи в файл '" + dict.fileName + "'");
+	}
+}
+
 void CheckDictChangesAndSaveIfNeed(Dict& dict)
 {
 	if (dict.isMod)
@@ -134,37 +153,23 @@ void InteractWithDict(Dict& dict)
 	CheckDictChangesAndSaveIfNeed(dict);
 }
 
-void SaveDict(Dict dict)
-{
-	std::ofstream file;
-	file.open(dict.fileName);
-	for (auto iter{ dict.dict.cbegin() }; iter != dict.dict.cend(); iter++)
-	{
-		file << iter->first << "\n" << iter->second << '\n';
-	}
-	file.close();
-}
-
 int main(int argc, char* argv[])
 {
 	SetConsoleCP(1251);
 	SetConsoleOutputCP(1251);
 	
-	Dict dict;
-
 	try
 	{
-		dict = CreateDict(argc, argv);
+		Dict dict = CreateDict(argc, argv);
+		if (dict.dict.size() > 0)
+		{
+			InteractWithDict(dict);
+		}
 	}
 	catch (std::runtime_error& ex)
 	{
 		std::cout << ex.what() << '\n';
 		return 1;
-	}
-
-	if (dict.dict.size() > 0)
-	{
-		InteractWithDict(dict);
 	}
 
 	return 0;
